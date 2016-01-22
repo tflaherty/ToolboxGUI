@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="Toolbox">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My AngularJS App</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="app.css">
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="components/angular/angular.min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="components/tool-man/core.js"></script>
+    <script language="JavaScript" type="text/javascript" src="components/tool-man/events.js"></script>
+    <script language="JavaScript" type="text/javascript" src="components/tool-man/css.js"></script>
+    <script language="JavaScript" type="text/javascript" src="components/tool-man/coordinates.js"></script>
+    <script language="JavaScript" type="text/javascript" src="components/tool-man/drag.js"></script>
+    <script language="JavaScript" type="text/javascript" src="components/tool-man/dragsort.js"></script>
+    <script language="JavaScript" type="text/javascript" src="components/tool-man/cookies.js"></script>
+    <script src="app.js"></script>
+    <script language="JavaScript" type="text/javascript">
+        var dragsort = ToolMan.dragsort();
+        var junkdrawer = ToolMan.junkdrawer();
+
+        function verticalOnly(item) {
+            item.toolManDragGroup.verticalOnly();
+        }
+
+        function speak(id, what) {
+            var element = document.getElementById(id);
+            element.innerHTML = 'Clicked' + what;
+        }
+
+        function saveOrder(item) {
+            var group = item.toolManDragGroup;
+            var list = group.element.parentNode;
+            var id = list.getAttribute("id");
+            if (id != null) {
+                group.register('dragend', function () {
+                    ToolMan.cookies().set("list-" + id,
+                            junkdrawer.serializeList(list), 365)
+                });
+            }
+        }
+    </script>
+</head>
+<body ng-controller="TIVSController">
+<div class="hideShowList" ng-show='showColumnSelect'>
+    <ul>
+        <li my-Draggable="{array: theModel.skuColumns, index: $index }" ng-repeat="skuColumn in theModel.skuColumns"><input type="checkbox" ng-model="skuColumn.show">{{skuColumn.name}}
+        </li>
+    </ul>
+</div>
+<div class="theTable">
+    <table>
+        <thead>
+	    <button ng-click="showColumnSelect = !showColumnSelect">Show & Order Columns</button>
+            <button ng-click="incPage(-1)">&lt;</button>
+            <button ng-click="incPage(1)">&gt;</button>
+            <div>Page: <select ng-model='limitVal' ng-options = 'item for item in limitRange'></select></div>
+	    <tr>
+	        <td ng-repeat="skuColumn in theModel.skuColumns | filter:{show: true}">{{skuColumn.name}}</td>
+	    </tr>
+	</thead>
+        <tbody>
+        <tr ng-repeat="itemView in theModel.rawData.TIVS_SKUView | limitTo:limitVal:begin">
+            <td ng-repeat="(key, value) in itemView | custom: theModel.skuColumns">{{value}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

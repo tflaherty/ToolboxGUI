@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>http://tool-man.org/ToolManDHTML/sorting.html</title><link rel="stylesheet" type="text/css" href="http%20_tool-man.org_ToolManDHTML_sorting_files/viewsource.css"></head><body contextmenu="actions" id="viewsource" class="highlight" style="-moz-tab-size: 4"><pre id="line1"><span></span><span class="doctype">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"&gt;</span><span>
+<span id="line2"></span></span><span class="comment">&lt;!-- Copyright (c) 2005 Tim Taylor Consulting (see LICENSE.txt) --&gt;</span><span>
+<span id="line3"></span></span><span>&lt;<span class="start-tag">html</span>&gt;</span><span>
+<span id="line4"></span></span><span>&lt;<span class="start-tag">head</span>&gt;</span><span>
+<span id="line5"></span></span><span>&lt;<span class="start-tag">title</span>&gt;</span><span>Drag <span class="entity"><span>&amp;</span>amp;</span> Drop Sortable Lists with JavaScript and CSS</span><span>&lt;/<span class="end-tag">title</span>&gt;</span><span>
+<span id="line6"></span></span><span>&lt;<span class="start-tag">link</span> <span class="attribute-name">rel</span>="<a class="attribute-value">stylesheet</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/css</a>" <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/common/common.css" class="attribute-value">common/common.css</a>"<span>/</span>&gt;</span><span>
+<span id="line7"></span></span><span>&lt;<span class="start-tag">link</span> <span class="attribute-name">rel</span>="<a class="attribute-value">stylesheet</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/css</a>" <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/common/lists.css" class="attribute-value">common/lists.css</a>"<span>/</span>&gt;</span><span>
+<span id="line8"></span></span><span>&lt;<span class="start-tag">style</span> <span class="attribute-name">type</span>="<a class="attribute-value">text/css</a>"&gt;</span><span></span><span>&lt;</span><span>!--
+<span id="line9"></span>	.statusbox {
+<span id="line10"></span>		font-size: 13px;
+<span id="line11"></span>		font-family: Monaco, monospace;
+<span id="line12"></span>		width: 15em;
+<span id="line13"></span>	}
+<span id="line14"></span>	ul.boxy li { margin: 0px; }
+<span id="line15"></span>	#phonetics td {
+<span id="line16"></span>		margin: 0px;
+<span id="line17"></span>		padding: 0px 1em;
+<span id="line18"></span>		vertical-align: top;
+<span id="line19"></span>		width: 100px;
+<span id="line20"></span>	}
+<span id="line21"></span>	#phonetic1 li, #phonetic2 li, #phonetic3 li { margin: 0px; }
+<span id="line22"></span>	#phonetic2 li {
+<span id="line23"></span>		margin-bottom: 4px;
+<span id="line24"></span>	}
+<span id="line25"></span>	#phonetic3 { margin-top: -4px; }
+<span id="line26"></span>	#phonetic3 li { margin-top: 4px; }
+<span id="line27"></span>	#phoneticlong {
+<span id="line28"></span>		margin-bottom: 1em;
+<span id="line29"></span>	}
+<span id="line30"></span>	#phoneticlong li, #buttons li {
+<span id="line31"></span>		margin-bottom: 0px;
+<span id="line32"></span>		margin-top: 4px;
+<span id="line33"></span>	}
+<span id="line34"></span>
+<span id="line35"></span>	#boxes {
+<span id="line36"></span>		font-family: Arial, sans-serif;
+<span id="line37"></span>		list-style-type: none;
+<span id="line38"></span>		margin: 0px;
+<span id="line39"></span>		padding: 0px;
+<span id="line40"></span>		width: 300px;
+<span id="line41"></span>	}
+<span id="line42"></span>	#boxes li {
+<span id="line43"></span>		cursor: move;
+<span id="line44"></span>		position: relative;
+<span id="line45"></span>		float: left;
+<span id="line46"></span>		margin: 2px 2px 0px 0px;
+<span id="line47"></span>		width: 33px;
+<span id="line48"></span>		height: 28px;
+<span id="line49"></span>		border: 1px solid #000;
+<span id="line50"></span>		text-align: center;
+<span id="line51"></span>		padding-top: 5px;
+<span id="line52"></span>		background-color: #eeeeff;
+<span id="line53"></span>	}
+<span id="line54"></span>
+<span id="line55"></span>	#twolists td {
+<span id="line56"></span>		width: 300px;
+<span id="line57"></span>		vertical-align: top;
+<span id="line58"></span>	}
+<span id="line59"></span>	#twolists1 li {
+<span id="line60"></span>		font-family: sans-serif;
+<span id="line61"></span>	}
+<span id="line62"></span>	#twolists2 {
+<span id="line63"></span>		border: 1px dashed #fff;
+<span id="line64"></span>	}
+<span id="line65"></span>	#twolists2 li {
+<span id="line66"></span>		font-family: serif;
+<span id="line67"></span>		background-color: #eedddd;
+<span id="line68"></span>	}
+<span id="line69"></span>	.inspector {
+<span id="line70"></span>		font-size: 11px;
+<span id="line71"></span>	}
+<span id="line72"></span>	//--&gt;
+<span id="line73"></span></span><span>&lt;/<span class="end-tag">style</span>&gt;</span><span>
+<span id="line74"></span>
+<span id="line75"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">language</span>="<a class="attribute-value">JavaScript</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>" <span class="attribute-name">src</span>="<a href="view-source:https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/core.js" class="attribute-value">https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/core.js</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line76"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">language</span>="<a class="attribute-value">JavaScript</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>" <span class="attribute-name">src</span>="<a href="view-source:https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/events.js" class="attribute-value">https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/events.js</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line77"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">language</span>="<a class="attribute-value">JavaScript</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>" <span class="attribute-name">src</span>="<a href="view-source:https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/css.js" class="attribute-value">https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/css.js</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line78"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">language</span>="<a class="attribute-value">JavaScript</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>" <span class="attribute-name">src</span>="<a href="view-source:https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/coordinates.js" class="attribute-value">https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/coordinates.js</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line79"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">language</span>="<a class="attribute-value">JavaScript</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>" <span class="attribute-name">src</span>="<a href="view-source:https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/drag.js" class="attribute-value">https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/drag.js</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line80"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">language</span>="<a class="attribute-value">JavaScript</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>" <span class="attribute-name">src</span>="<a href="view-source:https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/dragsort.js" class="attribute-value">https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/dragsort.js</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line81"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">language</span>="<a class="attribute-value">JavaScript</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>" <span class="attribute-name">src</span>="<a href="view-source:https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/cookies.js" class="attribute-value">https://raw.github.com/toolbear/ToolManDHTML/ced12033d09a39dd8cc77d50b75c12cc4ce821da/source/org/tool-man/cookies.js</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line82"></span>
+<span id="line83"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">language</span>="<a class="attribute-value">JavaScript</a>" <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>"&gt;</span><span></span><span>&lt;!</span><span>--
+<span id="line84"></span>	var dragsort = ToolMan.dragsort()
+<span id="line85"></span>	var junkdrawer = ToolMan.junkdrawer()
+<span id="line86"></span>
+<span id="line87"></span>	window.onload = function() {
+<span id="line88"></span>		junkdrawer.restoreListOrder("numeric")
+<span id="line89"></span>		junkdrawer.restoreListOrder("phonetic1")
+<span id="line90"></span>		junkdrawer.restoreListOrder("phonetic2")
+<span id="line91"></span>		junkdrawer.restoreListOrder("phonetic3")
+<span id="line92"></span>		junkdrawer.restoreListOrder("phoneticlong")
+<span id="line93"></span>		junkdrawer.restoreListOrder("boxes")
+<span id="line94"></span>		junkdrawer.restoreListOrder("buttons")
+<span id="line95"></span>		//junkdrawer.restoreListOrder("twolists1")
+<span id="line96"></span>		//junkdrawer.restoreListOrder("twolists2")
+<span id="line97"></span>
+<span id="line98"></span>		dragsort.makeListSortable(document.getElementById("numeric"),
+<span id="line99"></span>				verticalOnly, saveOrder)
+<span id="line100"></span>
+<span id="line101"></span>		dragsort.makeListSortable(document.getElementById("phonetic1"),
+<span id="line102"></span>				verticalOnly, saveOrder)
+<span id="line103"></span>		dragsort.makeListSortable(document.getElementById("phonetic2"),
+<span id="line104"></span>				verticalOnly, saveOrder)
+<span id="line105"></span>		dragsort.makeListSortable(document.getElementById("phonetic3"),
+<span id="line106"></span>				verticalOnly, saveOrder)
+<span id="line107"></span>		dragsort.makeListSortable(document.getElementById("phoneticlong"),
+<span id="line108"></span>				verticalOnly, saveOrder)
+<span id="line109"></span>
+<span id="line110"></span>		dragsort.makeListSortable(document.getElementById("boxes"),
+<span id="line111"></span>				saveOrder)
+<span id="line112"></span>
+<span id="line113"></span>		dragsort.makeListSortable(document.getElementById("buttons"),
+<span id="line114"></span>				saveOrder)
+<span id="line115"></span>
+<span id="line116"></span>		/*
+<span id="line117"></span>		dragsort.makeListSortable(document.getElementById("twolists1"),
+<span id="line118"></span>				saveOrder)
+<span id="line119"></span>		dragsort.makeListSortable(document.getElementById("twolists2"),
+<span id="line120"></span>				saveOrder)
+<span id="line121"></span>		*/
+<span id="line122"></span>	}
+<span id="line123"></span>
+<span id="line124"></span>	function verticalOnly(item) {
+<span id="line125"></span>		item.toolManDragGroup.verticalOnly()
+<span id="line126"></span>	}
+<span id="line127"></span>
+<span id="line128"></span>	function speak(id, what) {
+<span id="line129"></span>		var element = document.getElementById(id);
+<span id="line130"></span>		element.innerHTML = 'Clicked ' + what;
+<span id="line131"></span>	}
+<span id="line132"></span>
+<span id="line133"></span>	function saveOrder(item) {
+<span id="line134"></span>		var group = item.toolManDragGroup
+<span id="line135"></span>		var list = group.element.parentNode
+<span id="line136"></span>		var id = list.getAttribute("id")
+<span id="line137"></span>		if (id == null) return
+<span id="line138"></span>		group.register('dragend', function() {
+<span id="line139"></span>			ToolMan.cookies().set("list-" + id, 
+<span id="line140"></span>					junkdrawer.serializeList(list), 365)
+<span id="line141"></span>		})
+<span id="line142"></span>	}
+<span id="line143"></span>
+<span id="line144"></span>	//--&gt;
+<span id="line145"></span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line146"></span></span><span>&lt;/<span class="end-tag">head</span>&gt;</span><span>
+<span id="line147"></span></span><span>&lt;<span class="start-tag">body</span>&gt;</span><span>
+<span id="line148"></span>
+<span id="line149"></span></span><span>&lt;<span class="start-tag">h1</span>&gt;</span><span>Drag <span class="entity"><span>&amp;</span>amp;</span> Drop Sortable Lists with JavaScript and CSS</span><span>&lt;/<span class="end-tag">h1</span>&gt;</span><span>
+<span id="line150"></span></span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">class</span>="<a class="attribute-value">breadcrumb</a>"&gt;</span><span>
+<span id="line151"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">first</a>"&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/" class="attribute-value">http://tool-man.org/</a>"&gt;</span><span>Home</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line152"></span>	</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/index.html" class="attribute-value">./index.html</a>"&gt;</span><span>Other Examples</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line153"></span></span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line154"></span></span><span>&lt;<span class="start-tag">br</span> <span class="attribute-name">class</span>="<a class="attribute-value">clear</a>"<span>/</span>&gt;</span><span>
+<span id="line155"></span>
+<span id="line156"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">class</span>="<a class="attribute-value">sidebar</a>"&gt;</span><span>
+<span id="line157"></span>	</span><span>&lt;<span class="start-tag">p</span>&gt;</span><span></span><span>&lt;<span class="start-tag">b</span>&gt;</span><span>Dead Project</span><span>&lt;/<span class="end-tag">b</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line158"></span>	
+<span id="line159"></span>	</span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>ToolManDHTML has been inactive since 2005. It isn't being maintained. I'm leaving the site up for historical purposes and for
+<span id="line160"></span>	anyone who still wants access to the examples and source. Thank you to everyone for your interest, compliments and support.
+<span id="line161"></span>	(</span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://blog.tool-man.org/toolman-dhtml-library-not-supported/19" class="attribute-value">http://blog.tool-man.org/toolman-dhtml-library-not-supported/19</a>"&gt;</span><span>article</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>)</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line162"></span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line163"></span>
+<span id="line164"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">class</span>="<a class="attribute-value">sidebar</a>"&gt;</span><span>
+<span id="line165"></span>	</span><span>&lt;<span class="start-tag">p</span>&gt;</span><span></span><span>&lt;<span class="start-tag">b</span>&gt;</span><span>Download</span><span>&lt;/<span class="end-tag">b</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line166"></span>	
+<span id="line167"></span>	</span><span>&lt;<span class="start-tag">p</span>&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:https://github.com/downloads/toolbear/ToolManDHTML/ToolManDHTML-0.2.zip" class="attribute-value">https://github.com/downloads/toolbear/ToolManDHTML/ToolManDHTML-0.2.zip</a>"&gt;</span><span>Version 0.2</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span><span class="entity"><span>&amp;</span>nbsp;</span><span class="entity"><span>&amp;</span>nbsp;</span>(</span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/LICENSE.txt" class="attribute-value">LICENSE.txt</a>"&gt;</span><span>license</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>)</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line168"></span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line169"></span>
+<span id="line170"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>In Web applications I've seen numerous <span class="entity"><span>&amp;</span>#8212;</span> and personally implemented 
+<span id="line171"></span>a few <span class="entity"><span>&amp;</span>#8212;</span> ways to rearrange items in a list.  All of those were
+<span id="line172"></span>indirect interactions typically involving something like up/down arrows next
+<span id="line173"></span>to each item.  The most heinous require server roundtrips for each 
+<span id="line174"></span>modification...boo.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line175"></span>
+<span id="line176"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Then I came across Simon Cozens' example
+<span id="line177"></span>of </span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://web.archive.org/web/20041010061435/http://blog.simon-cozens.org/6785.html" class="attribute-value">http://web.archive.org/web/20041010061435/http://blog.simon-cozens.org/6785.html</a>"&gt;</span><span>rearranging a list via 
+<span id="line178"></span>drag <span class="entity"><span>&amp;</span>amp;</span> drop</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>.  I was so inspired I had to try it out myself.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line179"></span>
+<span id="line180"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>Example: A Basic List</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line181"></span>
+<span id="line182"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Essentially 
+<span id="line183"></span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://web.archive.org/web/20041010061435/http://blog.simon-cozens.org/6785.html" class="attribute-value">http://web.archive.org/web/20041010061435/http://blog.simon-cozens.org/6785.html</a>"&gt;</span><span>Simon Cozen's example</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>
+<span id="line184"></span>with some subtle enhancements.  It's not obvious, but go ahead and
+<span id="line185"></span></span><span>&lt;<span class="start-tag">b</span>&gt;</span><span>rearrange the items</span><span>&lt;/<span class="end-tag">b</span>&gt;</span><span>:</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line186"></span>
+<span id="line187"></span></span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">id</span>="<a class="attribute-value">numeric</a>"&gt;</span><span>
+<span id="line188"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">1</a>"&gt;</span><span>one</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line189"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">2</a>"&gt;</span><span>two</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line190"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">3</a>"&gt;</span><span>three</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line191"></span></span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line192"></span>
+<span id="line193"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">class</span>="<a class="attribute-value">sidebar</a>"&gt;</span><span>
+<span id="line194"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Click an </span><span>&lt;<span class="start-tag">input</span> <span class="attribute-name">class</span>="<a class="attribute-value">inspector</a>" <span class="attribute-name">type</span>="<a class="attribute-value">button</a>" <span class="attribute-name">value</span>="<a class="attribute-value">Inspect</a>" <span class="attribute-name">onclick</span>="<a class="attribute-value">junkdrawer.inspectListOrder('numeric')</a>" <span class="attribute-name">style</span>="<a class="attribute-value">margin: 0px; padding: 0px; font-size: 11px;</a>"<span>/</span>&gt;</span><span>
+<span id="line195"></span>button to reveal the serialized version of the associated list.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line196"></span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line197"></span>
+<span id="line198"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>In Firefox you can also drag the </span><span>&lt;<span class="start-tag">i</span>&gt;</span><span>bullet</span><span>&lt;/<span class="end-tag">i</span>&gt;</span><span> to move an item.  Keen.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line199"></span>
+<span id="line200"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span></span><span>&lt;<span class="start-tag">b</span>&gt;</span><span>Saving the reorderd list</span><span>&lt;/<span class="end-tag">b</span>&gt;</span><span> is possible by inspecting the DOM.  All
+<span id="line201"></span>the sortable lists on this page retain their order via cookies (try 
+<span id="line202"></span>rearranging a list and then reloading the page).  Read a
+<span id="line203"></span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://blog.tool-man.org/saving-a-reordered-list/14" class="attribute-value">http://blog.tool-man.org/saving-a-reordered-list/14</a>"&gt;</span><span>description of the technique</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span> on my blog.
+<span id="line204"></span></span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line205"></span>
+<span id="line206"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>Example: Add Some Style</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line207"></span>
+<span id="line208"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">class</span>="<a class="attribute-value">sidebar</a>"&gt;</span><span>
+<span id="line209"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Firefox exhibits a quirky bug on this example.  If the list items
+<span id="line210"></span>have a bottom margin, all following content pops down a few pixels when
+<span id="line211"></span>you start dragging the item.  No such problem when the item has a top
+<span id="line212"></span>margin so a workaround is possible.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line213"></span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line214"></span>
+<span id="line215"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>I added some styling and cursor hinting in an attempt to make
+<span id="line216"></span>the dragability more obvious (see 
+<span id="line217"></span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/edit-in-place.html" class="attribute-value">edit-in-place.html</a>"&gt;</span><span>in-place editing</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span> for an example
+<span id="line218"></span>with drag handles)</span><span title="Stray end tag “a”." class="error">&lt;/<span class="end-tag">a</span>&gt;</span><span>.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line219"></span>
+<span id="line220"></span></span><span>&lt;<span class="start-tag">table</span> <span class="attribute-name">id</span>="<a class="attribute-value">phonetics</a>"&gt;</span><span>
+<span id="line221"></span>	</span><span>&lt;<span class="start-tag">tr</span>&gt;</span><span>
+<span id="line222"></span>		</span><span>&lt;<span class="start-tag">td</span>&gt;</span><span>
+<span id="line223"></span>			</span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">id</span>="<a class="attribute-value">phonetic1</a>" <span class="attribute-name">class</span>="<a class="attribute-value">boxy</a>"&gt;</span><span>
+<span id="line224"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>alpha</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line225"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>bravo</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line226"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>charlie</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line227"></span>			</span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line228"></span>		</span><span>&lt;/<span class="end-tag">td</span>&gt;</span><span>
+<span id="line229"></span>		</span><span>&lt;<span class="start-tag">td</span>&gt;</span><span>
+<span id="line230"></span>			</span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">id</span>="<a class="attribute-value">phonetic2</a>" <span class="attribute-name">class</span>="<a class="attribute-value">boxy</a>"&gt;</span><span>
+<span id="line231"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>alpha</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line232"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>bravo</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line233"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>charlie</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line234"></span>			</span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line235"></span>		</span><span>&lt;/<span class="end-tag">td</span>&gt;</span><span>
+<span id="line236"></span>		</span><span>&lt;<span class="start-tag">td</span>&gt;</span><span>
+<span id="line237"></span>			</span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">id</span>="<a class="attribute-value">phonetic3</a>" <span class="attribute-name">class</span>="<a class="attribute-value">boxy</a>"&gt;</span><span>
+<span id="line238"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>alpha</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line239"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>bravo</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line240"></span>				</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>charlie</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line241"></span>			</span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line242"></span>		</span><span>&lt;/<span class="end-tag">td</span>&gt;</span><span>
+<span id="line243"></span>	</span><span>&lt;/<span class="end-tag">tr</span>&gt;</span><span>
+<span id="line244"></span>	</span><span>&lt;<span class="start-tag">tr</span>&gt;</span><span>
+<span id="line245"></span>		</span><span>&lt;<span class="start-tag">td</span> <span class="attribute-name">class</span>="<a class="attribute-value">caption</a>"&gt;</span><span>no margin on list items</span><span>&lt;/<span class="end-tag">td</span>&gt;</span><span>
+<span id="line246"></span>		</span><span>&lt;<span class="start-tag">td</span> <span class="attribute-name">class</span>="<a class="attribute-value">caption</a>"&gt;</span><span>4px bottom margin on list items.  Firefox exhibits 
+<span id="line247"></span>		bug when dragging.</span><span>&lt;/<span class="end-tag">td</span>&gt;</span><span>
+<span id="line248"></span>		</span><span>&lt;<span class="start-tag">td</span> <span class="attribute-name">class</span>="<a class="attribute-value">caption</a>"&gt;</span><span>Firefox workaround: -4px top margin on list, 4px
+<span id="line249"></span>		top margin on list items.</span><span>&lt;/<span class="end-tag">td</span>&gt;</span><span>
+<span id="line250"></span>	</span><span>&lt;/<span class="end-tag">tr</span>&gt;</span><span>
+<span id="line251"></span></span><span>&lt;/<span class="end-tag">table</span>&gt;</span><span>
+<span id="line252"></span>
+<span id="line253"></span></span><span>&lt;<span class="start-tag">p</span> <span class="attribute-name">style</span>="<a class="attribute-value">margin-top: 2em</a>"&gt;</span><span>This next list is intentionally long to see how well the technique 
+<span id="line254"></span>scales up and uncover other interaction issues.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line255"></span>
+<span id="line256"></span></span><span class="comment">&lt;!-- yeah, it's invalid XHTML.  Suck it up, pedant-boy :) --&gt;</span><span>
+<span id="line257"></span></span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">id</span>="<a class="attribute-value">phoneticlong</a>" <span class="attribute-name">class</span>="<a class="attribute-value">boxy</a>"&gt;</span><span>
+<span id="line258"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">a</a>"&gt;</span><span>alpha</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line259"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">b</a>"&gt;</span><span>bravo</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line260"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">c</a>"&gt;</span><span>charlie</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line261"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">d</a>"&gt;</span><span>delta</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line262"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">e</a>"&gt;</span><span>echo</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line263"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">f</a>"&gt;</span><span>foxtrot</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line264"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">g</a>"&gt;</span><span>golf</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line265"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">h</a>"&gt;</span><span>hotel</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line266"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">i</a>"&gt;</span><span>india</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line267"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">j</a>"&gt;</span><span>juliet</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line268"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">k</a>"&gt;</span><span>kilo</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line269"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">l</a>"&gt;</span><span>lima</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line270"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">m</a>"&gt;</span><span>mike</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line271"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">n</a>"&gt;</span><span>november</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line272"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">o</a>"&gt;</span><span>oscar</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line273"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">p</a>"&gt;</span><span>papa</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line274"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">q</a>"&gt;</span><span>quebec</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line275"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">r</a>"&gt;</span><span>romeo</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line276"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">s</a>"&gt;</span><span>sierra</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line277"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">t</a>"&gt;</span><span>tango</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line278"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">u</a>"&gt;</span><span>uniform</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line279"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">v</a>"&gt;</span><span>victor</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line280"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">w</a>"&gt;</span><span>whiskey</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line281"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">x</a>"&gt;</span><span>xray</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line282"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">y</a>"&gt;</span><span>yankee</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line283"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">z</a>"&gt;</span><span>zulu</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line284"></span></span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line285"></span>
+<span id="line286"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span></span><span>&lt;<span class="start-tag">input</span> <span class="attribute-name">class</span>="<a class="attribute-value">inspector</a>" <span class="attribute-name">type</span>="<a class="attribute-value">button</a>" <span class="attribute-name">value</span>="<a class="attribute-value">Inspect</a>" <span class="attribute-name">onclick</span>="<a class="attribute-value">junkdrawer.inspectListOrder('phoneticlong')</a>"<span>/</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line287"></span>
+<span id="line288"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>You'll notice if part of this list is below the fold, it requires
+<span id="line289"></span>at least 2 drags to move an item from the beginning to the end (technically
+<span id="line290"></span>3 drags if you count the one on your browser's scrollbar).  Automatic 
+<span id="line291"></span>scrolling, like in Word or Excel, is a well established solution to this 
+<span id="line292"></span>problem.  Adding that is a work in progress.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line293"></span>
+<span id="line294"></span>
+<span id="line295"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>Example: Sorting in two dimensions</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line296"></span>
+<span id="line297"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">class</span>="<a class="attribute-value">sidebar</a>"&gt;</span><span>
+<span id="line298"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Yet another bizarre bug in firefox.  The short version:
+<span id="line299"></span>use a DIV instead of a BR to clear the </span><span>&lt;<span class="start-tag">code</span>&gt;</span><span>float: left</span><span>&lt;/<span class="end-tag">code</span>&gt;</span><span>
+<span id="line300"></span>else things won<span class="entity"><span>&amp;</span>#8217;</span>t remain as you expect them once you start 
+<span id="line301"></span>dragging.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line302"></span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line303"></span>
+<span id="line304"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>With sorting vertically oriented items under our belt, onto
+<span id="line305"></span>the next challenge: sorting floated, wrapped list items.  Earlier 
+<span id="line306"></span>versions of my code had separate scripts for vertical, horizontal, and 
+<span id="line307"></span>wrapped lists.  Now they are unified into one script that </span><span>&lt;<span class="start-tag">i</span>&gt;</span><span>does it all</span><span>&lt;/<span class="end-tag">i</span>&gt;</span><span>.
+<span id="line308"></span>Amazing!</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line309"></span>
+<span id="line310"></span></span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">id</span>="<a class="attribute-value">boxes</a>"&gt;</span><span>
+<span id="line311"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>A</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line312"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>B</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line313"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>C</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line314"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>D</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line315"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>E</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line316"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>F</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line317"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>G</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line318"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>H</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line319"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>I</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line320"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>J</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line321"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>K</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line322"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>L</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line323"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>M</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line324"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>N</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line325"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>O</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line326"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>P</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line327"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>Q</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line328"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>R</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line329"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>S</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line330"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>T</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line331"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>U</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line332"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>V</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line333"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>W</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line334"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>X</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line335"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>Y</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line336"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">box</a>"&gt;</span><span>Z</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line337"></span></span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line338"></span>
+<span id="line339"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">style</span>="<a class="attribute-value">clear: left;</a>"&gt;</span><span></span><span>&lt;<span class="start-tag">br</span><span>/</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line340"></span>
+<span id="line341"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span></span><span>&lt;<span class="start-tag">input</span> <span class="attribute-name">class</span>="<a class="attribute-value">inspector</a>" <span class="attribute-name">type</span>="<a class="attribute-value">button</a>" <span class="attribute-name">value</span>="<a class="attribute-value">Inspect</a>" <span class="attribute-name">onclick</span>="<a class="attribute-value">junkdrawer.inspectListOrder('boxes')</a>"<span>/</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line342"></span>
+<span id="line343"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>A previous version determined when to swap based on the position of the
+<span id="line344"></span>top-left corner of the item being dragged.  It was this example and the 
+<span id="line345"></span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/edit-in-place.html#slideshow-example" class="attribute-value">edit-in-place.html#slideshow-example</a>"&gt;</span><span>slide arranger</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>
+<span id="line346"></span>example which illustrated that the better interaction is to base this on
+<span id="line347"></span>the position of the cursor, which is how the script works now.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line348"></span>
+<span id="line349"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>Example: Sortable links or buttons</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line350"></span>
+<span id="line351"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">class</span>="<a class="attribute-value">sidebar</a>"&gt;</span><span>
+<span id="line352"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Firefox and Safari still generate a 'click' event even after performing
+<span id="line353"></span>a drag.  This can be overcome with more JavaScript.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line354"></span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line355"></span>
+<span id="line356"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">class</span>="<a class="attribute-value">sidebar</a>"&gt;</span><span>
+<span id="line357"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>IE isn't rendering the link elements with </span><span>&lt;<span class="start-tag">code</span>&gt;</span><span>display: block</span><span>&lt;/<span class="end-tag">code</span>&gt;</span><span>.
+<span id="line358"></span>So only the link text is clickable.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line359"></span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line360"></span>
+<span id="line361"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Sortable items containing links.  Links are 'display: block' so the entire
+<span id="line362"></span>item is clickable (except this isn't so in IE).  As buttons go these aren't very good; they lack
+<span id="line363"></span>button affordances and behavior.  But I think you get the general idea.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line364"></span>
+<span id="line365"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">id</span>="<a class="attribute-value">buttonsStatus</a>" <span class="attribute-name">class</span>="<a class="attribute-value">statusbox</a>" <span class="attribute-name">style</span>="<a class="attribute-value">position: relative; left: 11em</a>"&gt;</span><span><span class="entity"><span>&amp;</span>nbsp;</span></span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line366"></span></span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">id</span>="<a class="attribute-value">buttons</a>" <span class="attribute-name">class</span>="<a class="attribute-value">sortable boxy clickable</a>"&gt;</span><span>
+<span id="line367"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">Save</a>"&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/sorting.html#" class="attribute-value">#</a>" <span class="attribute-name">onclick</span>="<a class="attribute-value">speak('buttonsStatus', this.innerHTML); return false;</a>"&gt;</span><span>Save</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line368"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">Cancel</a>"&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/sorting.html#" class="attribute-value">#</a>" <span class="attribute-name">onclick</span>="<a class="attribute-value">speak('buttonsStatus', this.innerHTML); return false;</a>"&gt;</span><span>Cancel</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line369"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">Preview</a>"&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/sorting.html#" class="attribute-value">#</a>" <span class="attribute-name">onclick</span>="<a class="attribute-value">speak('buttonsStatus', this.innerHTML); return false;</a>"&gt;</span><span>Preview</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line370"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">itemID</span>="<a class="attribute-value">Print</a>"&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/sorting.html#" class="attribute-value">#</a>" <span class="attribute-name">onclick</span>="<a class="attribute-value">speak('buttonsStatus', this.innerHTML); return false;</a>"&gt;</span><span>Print</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line371"></span></span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line372"></span></span><span>&lt;<span class="start-tag">br</span><span>/</span>&gt;</span><span>
+<span id="line373"></span>
+<span id="line374"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Very few people keep the mouse perfectly still when clicking on
+<span id="line375"></span>something.  To avoid accidental drags these buttons have a drag 
+<span id="line376"></span>threshold, as do all the examples on this page.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line377"></span>
+<span id="line378"></span>
+<span id="line379"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>Additional examples</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line380"></span>
+<span id="line381"></span></span><span>&lt;<span class="start-tag">ul</span>&gt;</span><span>
+<span id="line382"></span>	</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>The editable lists and presentation slide arranger examples on 
+<span id="line383"></span>	</span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/edit-in-place.html" class="attribute-value">edit-in-place.html</a>"&gt;</span><span>in-place editing</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span> demonstrate closer to 
+<span id="line384"></span>	"real world" usage of this technique.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line385"></span>
+<span id="line386"></span>	</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>These </span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/toolbars.html" class="attribute-value">toolbars.html</a>"&gt;</span><span>toolbar examples</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>
+<span id="line387"></span>	combine sortable buttons and hard core CSS styling to create
+<span id="line388"></span>	Windows-like toolbars.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line389"></span></span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line390"></span>	
+<span id="line391"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>TODO: Example: Drag between two lists</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line392"></span>
+<span id="line393"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://neb.net/nlog/2005/04/14/what-a-drop/" class="attribute-value">http://neb.net/nlog/2005/04/14/what-a-drop/</a>"&gt;</span><span>Benjamin Levy</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>
+<span id="line394"></span>is credited with the first version (that was based on my code) of
+<span id="line395"></span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://blog.tool-man.org/drag-between-lists/12" class="attribute-value">http://blog.tool-man.org/drag-between-lists/12</a>"&gt;</span><span>dragging between 
+<span id="line396"></span>two lists</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>.  Eventually this will be supported in the ToolMan DHTML Library.
+<span id="line397"></span></span><span class="comment">&lt;!--I've shamelessly (and with Benjamin's permission) folded
+<span id="line398"></span>his example into my latest version.--&gt;</span><span></span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line399"></span>
+<span id="line400"></span></span><span class="comment">&lt;!--
+<span id="line401"></span>&lt;p&gt;&lt;b&gt;Note: this doesn't work yet.&lt;/b&gt;&lt;/p&gt;
+<span id="line402"></span>
+<span id="line403"></span>&lt;table id="twolists"&gt;
+<span id="line404"></span>	&lt;tr&gt;
+<span id="line405"></span>		&lt;td&gt;
+<span id="line406"></span>			&lt;ul id="twolists1" class="boxy"&gt;
+<span id="line407"></span>				&lt;li&gt;alpha&lt;/li&gt;
+<span id="line408"></span>				&lt;li&gt;bravo&lt;/li&gt;
+<span id="line409"></span>				&lt;li&gt;charlie&lt;/li&gt;
+<span id="line410"></span>			&lt;/ul&gt;
+<span id="line411"></span>		&lt;/td&gt;
+<span id="line412"></span>		&lt;td&gt;
+<span id="line413"></span>			&lt;ul id="twolists2" class="boxy"&gt;
+<span id="line414"></span>				&lt;li&gt;one&lt;/li&gt;
+<span id="line415"></span>				&lt;li&gt;two&lt;/li&gt;
+<span id="line416"></span>				&lt;li&gt;three&lt;/li&gt;
+<span id="line417"></span>			&lt;/ul&gt;
+<span id="line418"></span>		&lt;/td&gt;
+<span id="line419"></span>	&lt;/tr&gt;
+<span id="line420"></span>&lt;/table&gt;
+<span id="line421"></span>
+<span id="line422"></span>&lt;p&gt;Desired interactions:&lt;/p&gt;
+<span id="line423"></span>
+<span id="line424"></span>&lt;ol&gt;
+<span id="line425"></span>&lt;li&gt;&lt;p&gt;Two distinct drag modes. One for sorting and another for dragging &amp;amp; d ropping.&lt;/p&gt;&lt;/li&gt;
+<span id="line426"></span>&lt;li&gt;&lt;p&gt;You&amp;#8217;re only ever in one mode per drag operation&lt;/p&gt;&lt;/li&gt;
+<span id="line427"></span>&lt;li&gt;&lt;p&gt;The direction you drag when
+ starting the drag operation determines the dragging mode. Dragging up 
+or down triggers sorting. Drag left or right triggers drag &amp;amp; 
+drop.  This differs from Benjamin&amp;#8217;s example.  It&amp;#8217;s 
+based on an interaction described by Alan Cooper in &amp;#8220;About 
+Face 2.0&amp;#8221;.&lt;/p&gt;&lt;/li&gt;
+<span id="line428"></span>&lt;li&gt;&lt;p&gt;Easier to initiate a sort 
+than to start drag &amp;amp; drop. Weight the drag threshold in favor of
+ a sort by making the sort threshold smaller than the DnD 
+threshold.&lt;/p&gt;&lt;/li&gt;
+<span id="line429"></span>&lt;/ol&gt;
+<span id="line430"></span>
+<span id="line431"></span>&lt;p&gt;This will require these new features:&lt;/p&gt;
+<span id="line432"></span>
+<span id="line433"></span>&lt;ul&gt;
+<span id="line434"></span>&lt;li&gt;&lt;p&gt;create a drag &amp;amp; drop library with sources and targets (or at least targets)&lt;/p&gt;&lt;/li&gt;
+<span id="line435"></span>&lt;li&gt;&lt;p&gt;change the current drag 
+threshold from a simple numeric distance to a function or object 
+(similar to how contraints are accomplished)&lt;/p&gt;&lt;/li&gt;
+<span id="line436"></span>&lt;/ul&gt;
+<span id="line437"></span>
+<span id="line438"></span>&lt;p&gt;Fun!&lt;/p&gt;
+<span id="line439"></span>--&gt;</span><span>
+<span id="line440"></span>
+<span id="line441"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>TODO: Example: Sorting within nested lists</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line442"></span>
+<span id="line443"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Steps:</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line444"></span></span><span>&lt;<span class="start-tag">ol</span>&gt;</span><span>
+<span id="line445"></span></span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>Complete <span class="entity"><span>&amp;</span>#8220;</span>Drag between two lists<span class="entity"><span>&amp;</span>#8221;</span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line446"></span></span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>???</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line447"></span></span><span>&lt;<span class="start-tag">li</span>&gt;</span><span>Profit</span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line448"></span></span><span>&lt;/<span class="end-tag">ol</span>&gt;</span><span>
+<span id="line449"></span>
+<span id="line450"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>TODO: sortable table cells or cell contents</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line451"></span>
+<span id="line452"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>This will take more work than I initially thought.  That's because the
+<span id="line453"></span>sorting script currently makes the assumption that sortable elements are
+<span id="line454"></span>immediate siblings of the same parent element.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line455"></span>
+<span id="line456"></span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>I may start by cloning the existing dragsort.js and customizing it for
+<span id="line457"></span>table cells, then see if the two can be generalized without making either
+<span id="line458"></span>a pain to use.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line459"></span>
+<span id="line460"></span></span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>TODO</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line461"></span>
+<span id="line462"></span></span><span>&lt;<span class="start-tag">ul</span>&gt;</span><span>
+<span id="line463"></span>	</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>FIXME: given a list of items with no margin, grab the
+<span id="line464"></span>	very top edge of an item to drag, drag it to the bottom, keep moving
+<span id="line465"></span>	your mouse.  The item will keep swapping with its previous 
+<span id="line466"></span>	sibling.</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line467"></span>
+<span id="line468"></span>	</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span></span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>FIXME: Firefox, ignore the click after a drag</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line469"></span></span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line470"></span>
+<span id="line471"></span></span><span>&lt;<span class="start-tag">ul</span> <span class="attribute-name">class</span>="<a class="attribute-value">breadcrumb</a>"&gt;</span><span>
+<span id="line472"></span>	</span><span>&lt;<span class="start-tag">li</span> <span class="attribute-name">class</span>="<a class="attribute-value">first</a>"&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/" class="attribute-value">http://tool-man.org/</a>"&gt;</span><span>Home</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line473"></span>	</span><span>&lt;<span class="start-tag">li</span>&gt;</span><span></span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/index.html" class="attribute-value">./index.html</a>"&gt;</span><span>Other Examples</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span></span><span>&lt;/<span class="end-tag">li</span>&gt;</span><span>
+<span id="line474"></span></span><span>&lt;/<span class="end-tag">ul</span>&gt;</span><span>
+<span id="line475"></span>
+<span id="line476"></span></span><span>&lt;<span class="start-tag">div</span> <span class="attribute-name">id</span>="<a class="attribute-value">copyright</a>"&gt;</span><span>Copyright <span class="entity"><span>&amp;</span>copy;</span> 2005 Tim Taylor Consulting
+<span id="line477"></span>(</span><span>&lt;<span class="start-tag">a</span> <span class="attribute-name">href</span>="<a href="view-source:http://tool-man.org/ToolManDHTML/LICENSE.txt" class="attribute-value">LICENSE.txt</a>"&gt;</span><span>license</span><span>&lt;/<span class="end-tag">a</span>&gt;</span><span>)</span><span>&lt;/<span class="end-tag">div</span>&gt;</span><span>
+<span id="line478"></span>
+<span id="line479"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>"&gt;</span><span>
+<span id="line480"></span>var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+<span id="line481"></span>document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+<span id="line482"></span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line483"></span></span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">type</span>="<a class="attribute-value">text/javascript</a>"&gt;</span><span>
+<span id="line484"></span>try {
+<span id="line485"></span>	var pageTracker = _gat._getTracker("UA-5938291-1");
+<span id="line486"></span>	pageTracker._trackPageview();
+<span id="line487"></span>} catch(err) {}</span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line488"></span>
+<span id="line489"></span></span><span>&lt;/<span class="end-tag">body</span>&gt;</span><span>
+<span id="line490"></span>
+<span id="line491"></span></span><span>&lt;/<span class="end-tag">html</span>&gt;</span><span>
+<span id="line492"></span></span></pre><menu id="actions" type="context"><menuitem accesskey="L" label="Go to Line…" id="goToLine"></menuitem><menuitem type="checkbox" label="Wrap Long Lines" id="wrapLongLines"></menuitem><menuitem checked="true" type="checkbox" label="Syntax Highlighting" id="highlightSyntax"></menuitem></menu></body></html>

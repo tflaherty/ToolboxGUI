@@ -1,0 +1,19 @@
+/* app css stylesheet */
+
+* {
+    box-sizing: border-box;
+}
+
+
+.hideShowList {
+    float: left;
+    font-size: xx-small;
+    max-width: 240px;
+    border: 4px inset #000000;
+}
+
+.hideShowList ul {
+    padding: 5px;
+    list-style-type: none;
+}
+
