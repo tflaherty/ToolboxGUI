@@ -252,6 +252,8 @@ t.controller("TIVSController", function ($scope) {
         $scope.begin = $scope.begin + (incVal * $scope.limitVal);
     };
 
+    // how to make a javascript library
+    // http://checkman.io/blog/creating-a-javascript-library/
     $scope.extractDistinctValues = function (dataArray) {
         var keys = Object.keys(dataArray[0]);
         var results = new Array(keys.length);
