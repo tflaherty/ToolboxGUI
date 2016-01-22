@@ -1,4 +1,3 @@
-
 // https://www.ng-book.com/
 // https://docs.angularjs.org/api/ng/filter/orderBy
 // very good http://blog.thoughtram.io/angularjs/2014/10/14/exploring-angular-1.3-one-time-bindings.html
@@ -19,7 +18,7 @@ var model = {
     user: "Tom"
 };
 
-function ColumnDisplayInfo(name, show, position){
+function ColumnDisplayInfo(name, show, position) {
     this.name = name;
     this.show = show;
     this.position = position;
@@ -34,8 +33,8 @@ function ColumnDisplayInfo(name, show, position){
 var t = angular.module('Toolbox', []);
 
 angular.module("Toolbox")
-    .filter('custom',function () {
-        return function(input, colList) {
+    .filter('custom', function () {
+        return function (input, colList) {
             if (!input) return input;
             var result = {};
             for (var x = 0; x < colList.length; x++) {
@@ -63,10 +62,10 @@ angular.module("Toolbox")
 // how to get information from my parent scope
 // https://umur.io/angularjs-directives-using-isolated-scope-with-attributes/
 angular.module("Toolbox")
-    .directive('myDraggable', ['$document', function($document) {
+    .directive('myDraggable', ['$document', function ($document) {
         return {
             scope: {columnInfo: "=myDraggable"},
-            link: function(scope, element, attr) {
+            link: function (scope, element, attr) {
                 var startX = 0, startY = 0, x = 0, y = 0;
                 var prevElement = null;
                 var originalBackgroundColor = element.css('backgroundColor');
@@ -81,7 +80,7 @@ angular.module("Toolbox")
                     cursor: 'grab'
                 });
 
-                element.on('mousedown', function(event) {
+                element.on('mousedown', function (event) {
                     oldIndexOfMovedItem = element.index();
                     beingDragged = true;
                     element.addClass('draggedListItem');
@@ -93,20 +92,20 @@ angular.module("Toolbox")
                     element.css({
                         fontSize: '150%',
                         backgroundColor: 'rgba(128, 128, 128,.5)',
-                        cursor: 'grabbing'			
+                        cursor: 'grabbing'
                     });
                     $document.on('mousemove', mousemove);
                     $document.on('mouseup', mouseup);
                 });
 
-                element.on('mouseenter', function(event) {
+                element.on('mouseenter', function (event) {
                     element.css({
                         fontSize: '150%',
                         backgroundColor: 'rgba(128, 128, 128,.5)'
                     });
                 });
 
-                element.on('mouseleave', function(event) {
+                element.on('mouseleave', function (event) {
                     if (!beingDragged) {
                         element.css({
                             fontSize: '100%',
@@ -117,20 +116,19 @@ angular.module("Toolbox")
 
                 function mousemove(event) {
                     if (event.pageY >= element.parent().offset().top && event.pageY < element.parent().offset().top + element.parent().outerHeight()
-                        && event.pageX > element.parent().offset().left - 10 && event.pageX < element.parent().offset().left + element.parent().outerWidth())
-                    {
+                        && event.pageX > element.parent().offset().left - 10 && event.pageX < element.parent().offset().left + element.parent().outerWidth()) {
                         y = event.pageY - startY;
                         //x = event.pageX - startX;
                         element.css({
                             top: y + 'px',
-                            left:  x + 'px'
+                            left: x + 'px'
                         });
 
                         var previous = element.prev();
 
                         moveTo = null;
                         while (previous.length) {
-			    if (event.pageY < previous.offset().top + previous.outerHeight() - 2) { 
+                            if (event.pageY < previous.offset().top + previous.outerHeight() - 2) {
                                 moveTo = previous;
                             }
                             previous = previous.prev();
@@ -200,7 +198,12 @@ angular.module("Toolbox")
                         }
                     }
 
-                    element.css({top: '0px', fontSize: '100%', backgroundColor: originalBackgroundColor, cursor: 'grab'});
+                    element.css({
+                        top: '0px',
+                        fontSize: '100%',
+                        backgroundColor: originalBackgroundColor,
+                        cursor: 'grab'
+                    });
                     $document.off('mousemove', mousemove);
                     $document.off('mouseup', mouseup);
                 }
@@ -216,9 +219,9 @@ t.run(function ($http, $location) {
         model.itemColumns = Object.keys(data.TIVS_ItemView);
         model.itemColorColumns = Object.keys(data.TIVS_ItemColorView);
         model.skuColumns = [];
-	for (var x = 0; x < data.TIVS_SKUView.length; x++) {
+        for (var x = 0; x < data.TIVS_SKUView.length; x++) {
             data.TIVS_SKUView[x].Item_code = data.TIVS_SKUView[x].ItemColorCodes.substring(0, 5);
-	}
+        }
         var skuColumnNames = Object.keys(data.TIVS_SKUView[0]);
         for (var i = 0; i < skuColumnNames.length; i++) {
             model.skuColumns.push(new ColumnDisplayInfo(skuColumnNames[i], false, i));
@@ -228,7 +231,7 @@ t.run(function ($http, $location) {
     })
 });
 
-t.controller("TIVSController", function($scope) {
+t.controller("TIVSController", function ($scope) {
     $scope.theModel = model;
     $scope.showColumnSelect = false;
     $scope.limitVal = 5;
@@ -236,7 +239,7 @@ t.controller("TIVSController", function($scope) {
     $scope.begin = 0;
     $scope.limitRange = [-1000, -500, -200, -100, -25, -10, -5, 5, 10, 25, 100, 200, 500, 1000, 10000];
 
-    $scope.showSKUColumns = function() {
+    $scope.showSKUColumns = function () {
         console.log('*** start of top level ************************************************');
         for (var i = 0; i < 4; i++) {
             console.log($scope.theModel.skuColumns[i]);
@@ -244,9 +247,26 @@ t.controller("TIVSController", function($scope) {
         console.log('*** end of top level ************************************************');
     };
 
-    $scope.incPage = function(incVal) {
+    $scope.incPage = function (incVal) {
         $scope.page = $scope.page + incVal;
         $scope.begin = $scope.begin + (incVal * $scope.limitVal);
+    };
+
+    $scope.extractDistinctValues = function (dataArray) {
+        var keys = Object.keys(dataArray[0]);
+        var results = new Array(keys.length);
+        for (var i = 0; i < keys.length; i++) {
+            results[keys[i]] = [];
+        }
+        for (var j = 0; j < dataArray.length; j++) {
+            for (var k = 0; k < keys.length; k++) {
+                if (results[keys[k]].indexOf(dataArray[j][keys[k]]) === - 1) {
+                    results[keys[k]].push(dataArray[j][keys[k]]);
+                }
+            }
+        }
+
+        return results;
     };
 });
 
