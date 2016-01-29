@@ -17,3 +17,25 @@
     list-style-type: none;
 }
 
+/*
+.theTable .hideShowList {
+    opacity: 0;
+    -webkit-transition: opacity .5s ease-in;
+    -moz-transition: opacity .5s ease-in;
+    -o-transition: opacity .5s ease-in;
+    transition: opacity .5s ease-in;
+    position: absolute;
+    //bottom: 0;
+    //left: 0;
+    //right: 0;
+    background-color: white;
+    font-size: xx-small;
+    max-width: 240px;
+    border: 4px inset #000000;
+}
+
+.theTable:hover .hideShowList {
+    opacity: 1;
+}
+*/
+

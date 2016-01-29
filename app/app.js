@@ -18,12 +18,6 @@ var model = {
     user: "Tom"
 };
 
-function ColumnDisplayInfo(name, show, position) {
-    this.name = name;
-    this.show = show;
-    this.position = position;
-}
-
 // how to use drag and drop to reorder lists!
 // http://tool-man.org/ToolManDHTML/sorting.html
 
@@ -215,17 +209,17 @@ angular.module("Toolbox")
 t.run(function ($http, $location) {
     $http.get("TIVSData.json").success(function (data) {
         model.rawData = data;
-        model.referenceItemColumns = Object.keys(data.TIVS_ReferenceItemView);
-        model.itemColumns = Object.keys(data.TIVS_ItemView);
-        model.itemColorColumns = Object.keys(data.TIVS_ItemColorView);
-        model.skuColumns = [];
+
         for (var x = 0; x < data.TIVS_SKUView.length; x++) {
             data.TIVS_SKUView[x].Item_code = data.TIVS_SKUView[x].ItemColorCodes.substring(0, 5);
         }
-        var skuColumnNames = Object.keys(data.TIVS_SKUView[0]);
-        for (var i = 0; i < skuColumnNames.length; i++) {
-            model.skuColumns.push(new ColumnDisplayInfo(skuColumnNames[i], false, i));
-        }
+        model.skuViewDataTable = new DataTable('skuViewDataTable', data.TIVS_SKUView);
+
+        model.itemColorColumns = new DataTable('itemColorViewDataTable', data.TIVS_ItemColorView);
+
+        model.itemColumns = new DataTable('itemViewDataTable', data.TIVS_ItemView);
+
+        model.referenceItemViewDataTable = new DataTable('skuViewDataTable', data.TIVS_ReferenceItemView);
     }).error(function (error) {
         alert("error in t.run: " + error);
     })
@@ -238,14 +232,6 @@ t.controller("TIVSController", function ($scope) {
     $scope.page = 0;
     $scope.begin = 0;
     $scope.limitRange = [-1000, -500, -200, -100, -25, -10, -5, 5, 10, 25, 100, 200, 500, 1000, 10000];
-
-    $scope.showSKUColumns = function () {
-        console.log('*** start of top level ************************************************');
-        for (var i = 0; i < 4; i++) {
-            console.log($scope.theModel.skuColumns[i]);
-        }
-        console.log('*** end of top level ************************************************');
-    };
 
     $scope.incPage = function (incVal) {
         $scope.page = $scope.page + incVal;

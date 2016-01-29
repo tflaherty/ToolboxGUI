@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="app.css">
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="components/angular/angular.min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="components/twf/dataTable.js"></script>
     <script language="JavaScript" type="text/javascript" src="components/tool-man/core.js"></script>
     <script language="JavaScript" type="text/javascript" src="components/tool-man/events.js"></script>
     <script language="JavaScript" type="text/javascript" src="components/tool-man/css.js"></script>
@@ -44,27 +45,32 @@
     </script>
 </head>
 <body ng-controller="TIVSController">
-<div class="hideShowList" ng-show='showColumnSelect'>
-    <ul>
-        <li my-Draggable="{array: theModel.skuColumns, index: $index }" ng-repeat="skuColumn in theModel.skuColumns"><input type="checkbox" ng-model="skuColumn.show">{{skuColumn.name}}
-        </li>
-    </ul>
-</div>
 <div class="theTable">
+    <div class="hideShowList" ng-show="showColumnSelect">
+        <ul>
+            <li my-Draggable="{array: theModel.skuViewDataTable.columnDisplayInfos, index: $index }"
+                ng-repeat="skuColumn in theModel.skuViewDataTable.columnDisplayInfos"><input type="checkbox" ng-model="skuColumn.show">{{skuColumn.name}}
+            </li>
+        </ul>
+    </div>
     <table>
         <thead>
-        <button ng-click="extractDistinctValues(theModel.rawData.TIVS_SKUView)"></button>
-	    <button ng-click="showColumnSelect = !showColumnSelect">Show & Order Columns</button>
-            <button ng-click="incPage(-1)">&lt;</button>
-            <button ng-click="incPage(1)">&gt;</button>
-            <div>Page: <select ng-model='limitVal' ng-options = 'item for item in limitRange'></select></div>
-	    <tr>
-	        <td ng-repeat="skuColumn in theModel.skuColumns | filter:{show: true}">{{skuColumn.name}}</td>
-	    </tr>
-	</thead>
+        <tr>
+            <th>
+                <button ng-click="showColumnSelect = !showColumnSelect">Show & Order Columns</button>
+                <button ng-click="showFilter = !showFilter">Filter Columns</button>
+                <button ng-click="incPage(-1)">&lt;</button>
+                <button ng-click="incPage(1)">&gt;</button>
+                <div>Page Size: <select ng-model='limitVal' ng-options='item for item in limitRange'></select></div>
+            </th>
+        </tr>
+        <tr>
+            <th ng-repeat="skuColumn in theModel.skuViewDataTable.columnDisplayInfos | filter:{show: true}">{{skuColumn.name}}</th>
+        </tr>
+        </thead>
         <tbody>
-        <tr ng-repeat="itemView in theModel.rawData.TIVS_SKUView | limitTo:limitVal:begin">
-            <td ng-repeat="(key, value) in itemView | custom: theModel.skuColumns">{{value}}</td>
+        <tr ng-repeat="itemView in theModel.skuViewDataTable.dataArray | limitTo:limitVal:begin">
+            <td ng-repeat="(key, value) in itemView | custom: theModel.skuViewDataTable.columnDisplayInfos">{{value}}</td>
         </tr>
         </tbody>
     </table>
