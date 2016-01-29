@@ -19,6 +19,36 @@ function ColumnDisplayInfo(name, show, position) {
     this.position = position;
 }
 
+function JoinInfo () {
+    var isInner = true;
+    var isLeft = false;
+    var joinColumns = [];
+
+    Object.defineProperty(this, 'isInner', {
+        configurable: false,
+        enumerable: true,
+        get: function () { return isInner; },
+        set: function (value) { isInner = value; }
+    });
+
+    Object.defineProperty(this, 'isLeft', {
+        configurable: false,
+        enumerable: true,
+        get: function () { return isLeft; },
+        set: function (value) { isLeft = value; }
+    });
+
+    Object.defineProperty(this, 'joinColumns', {
+        configurable: false,
+        enumerable: true,
+        get: function () { return joinColumns; }
+    });
+
+    var addJoinColumns = function(leftColumnName, rightColumnName) {
+        joinColumns.add(new { left: leftColumnName, right: rightColumnName });
+    }
+}
+
 function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
     // private variables
     var dataArray = _arrayOfRecordsUsingNameValuePairs;
@@ -121,5 +151,10 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
         return dataArray;
     }
 
-    // public methods
+    var join = function (otherDataTable, joinInfo) {
+        // this generates a full inner
+        // should this be a deep copy?
+        joinInfo.addJoinColumns("foo", "goo");
+        return new DataTable(dataArray);
+    }
 }
