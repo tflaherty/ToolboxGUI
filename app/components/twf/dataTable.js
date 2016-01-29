@@ -3,8 +3,16 @@
  */
 // how to make a javascript library
 // http://checkman.io/blog/creating-a-javascript-library/
+
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model
+
 // http://www.sitepoint.com/emerging-patterns-javascript-event-handling/
+
+// how to filter and sort data in windows forms
+// https://msdn.microsoft.com/en-us/library/69c06922%28v=vs.140%29.aspx
+// Filtering and sorting directly in data tables
+// https://msdn.microsoft.com/en-us/library/zk13kdh0%28v=vs.90%29.aspx
+
 function ColumnDisplayInfo(name, show, position) {
     this.name = name;
     this.show = show;
@@ -18,6 +26,8 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
     var colDisplayInfos = [];
     var colNames;
     var isDirty = false;
+    var filter = null;
+    var sort = null;
 
     // initialization code
     // assumes that the first row contains all the keys that
@@ -38,7 +48,7 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
     Object.defineProperty(this, 'dataArray', {
         configurable: false,
         enumerable: true,
-        get: function () { return dataArray; }
+        get: function () { return filterAndSortedDataArray(); }
     });
 
     Object.defineProperty(this, 'distinctValues', {
@@ -76,6 +86,20 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
         get: function () { return isDirty; }
     });
 
+    Object.defineProperty(this, 'filter', {
+        configurable: false,
+        enumerable: true,
+        get: function () { return filter; },
+        set: function (value) { filter = value; }
+    });
+
+    Object.defineProperty(this, 'sort', {
+        configurable: false,
+        enumerable: true,
+        get: function () { return sort; },
+        set: function (value) { sort = value; }
+    });
+
     // private methods
     var extractDistinctValues = function () {
         distinctValues.length = 0;
@@ -92,6 +116,10 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
 
         return distinctValues;
     };
+
+    var filterAndSortedDataArray = function () {
+        return dataArray;
+    }
 
     // public methods
 }
