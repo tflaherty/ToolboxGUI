@@ -49,7 +49,7 @@ th button:hover {
     /* text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #ff00de , 0 0 70px #ff00de , 0 0 80px #ff00de , 0 0 100px #ff00de ; */
     /* text-shadow: 0 0 2px rgba(255,255,255,1) , 0 0 5px rgba(255,255,255,1) , 0 0 7px rgba(255,255,255,1) , 0 0 10px #ff00de , 0 0 17px #ff00de , 0 0 20px #ff00de , 0 0 25px #ff00de ; */
     text-shadow: 0 0 1px rgba(255,255,255,1) , 0 0 2px rgba(255,255,255,1) , 0 0 3px rgba(255,255,255,1) , 0 0 4px #ff00de , 0 0 5px #ff00de , 0 0 6px #ff00de , 0 0 7px #ff00de ;
-    //color: floralwhite;
+    color: floralwhite;
 }
 
 td { border: 1px solid rgb(102 , 78, 102); border-radius: 5px; }

@@ -13,6 +13,9 @@
 // Filtering and sorting directly in data tables
 // https://msdn.microsoft.com/en-us/library/zk13kdh0%28v=vs.90%29.aspx
 
+// oo design in javascript
+// http://phrogz.net/JS/Classes/OOPinJS.html
+
 function ColumnDisplayInfo(name, show, position) {
     this.name = name;
     this.show = show;
@@ -38,13 +41,7 @@ function JoinInfo () {
         set: function (value) { isLeft = value; }
     });
 
-    Object.defineProperty(this, 'joinColumns', {
-        configurable: false,
-        enumerable: true,
-        get: function () { return joinColumns; }
-    });
-
-    var addJoinColumns = function(leftColumnName, rightColumnName) {
+    this.addJoinColumns = function(leftColumnName, rightColumnName) {
         joinColumns.add(new { left: leftColumnName, right: rightColumnName });
     }
 }
@@ -79,6 +76,12 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
         configurable: false,
         enumerable: true,
         get: function () { return filterAndSortedDataArray(); }
+    });
+
+    Object.defineProperty(this, 'rawDataArray', {
+        configurable: false,
+        enumerable: true,
+        get: function () { return dataArray; }
     });
 
     Object.defineProperty(this, 'distinctValues', {
@@ -151,10 +154,80 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
         return dataArray;
     }
 
-    var join = function (otherDataTable, joinInfo) {
+    this.join = function (otherDataTable, joinInfo) {
         // this generates a full inner
         // should this be a deep copy?
         joinInfo.addJoinColumns("foo", "goo");
         return new DataTable(dataArray);
+    }
+}
+
+function DataView(_dataViewName, _dataTable) {
+    // private variables
+    var colMap = [];
+    var _rows = [];
+
+    for (var i = 0; i < _dataTable.columnNames.length; i++) {
+        colMap.push({colIndex: i, show: false, colName: _dataTable.columnNames[i]});
+    }
+
+    // properties
+    Object.defineProperty(this, 'name', {
+        configurable: false,
+        enumerable: true,
+        value: _dataViewName,
+        writable: false
+    });
+
+    Object.defineProperty(this, 'dataTable', {
+        configurable: false,
+        enumerable: true,
+        value: _dataTable,
+        writable: false
+    });
+
+    Object.defineProperty(this, 'colMap', {
+        configurable: false,
+        enumerable: true,
+        get: function () { return colMap; }
+    });
+
+    Object.defineProperty(this, 'rows', {
+        configurable: false,
+        enumerable: true,
+        get: function () {
+            _rows.length = 0;
+            var newRow = {};
+            var emptyRow = true;
+            for (var row = 0; row < this.dataTable.rawDataArray.length; row++) {
+                emptyRow = true;
+                newRow = {};
+                for (var x = 0; x < colMap.length; x++) {
+                    if (colMap[x].show) {
+                        emptyRow = false;
+                        newRow[colMap[x].colName] = this.dataTable.rawDataArray[row][colMap[x].colName];
+                    }
+                }
+                if (!emptyRow) {
+                    _rows.push(newRow);
+                }
+            }
+            return _rows;
+        }
+    });
+
+    this.getColumnName = function (colIndex) {
+        return _dataTable.columnNames[colIndex];
+    }
+
+    this.showColumns = function (colNames, show) {
+        for (var i = 0; i < colNames.length; i++) {
+            for (var j = 0; j < colMap.length; j++) {
+                if (colMap[j].colName === colNames[i]) {
+                    colMap[j].show = show;
+                    break;
+                }
+            }
+        }
     }
 }

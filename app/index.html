@@ -48,8 +48,13 @@
 <div class="theTable">
     <div class="hideShowList" ng-show="showColumnSelect">
         <ul>
-            <li my-Draggable="{array: theModel.skuViewDataTable.columnDisplayInfos, index: $index }"
-                ng-repeat="skuColumn in theModel.skuViewDataTable.columnDisplayInfos"><input type="checkbox" ng-model="skuColumn.show">{{skuColumn.name}}
+            <!-- old way
+            <li my-Draggable="{array: theModel.skuDataTable.columnDisplayInfos, index: $index }"
+                ng-repeat="skuColumn in theModel.skuDataTable.columnDisplayInfos"><input type="checkbox" ng-model="skuColumn.show">{{skuColumn.name}}
+            </li>
+            -->
+            <li my-Draggable="{array: theModel.skuDataView.colMap, index: $index}"
+                ng-repeat="colMapVal in theModel.skuDataView.colMap"><input type="checkbox" ng-model="colMapVal.show">{{colMapVal.colName}}
             </li>
         </ul>
     </div>
@@ -65,12 +70,24 @@
             </th>
         </tr>
         <tr>
-            <th ng-repeat="skuColumn in theModel.skuViewDataTable.columnDisplayInfos | filter:{show: true}"><button>{{skuColumn.name}}</button></th>
+            <!-- old way
+            <th ng-repeat="skuColumn in theModel.skuDataTable.columnDisplayInfos | filter:{show: true}"><button>{{skuColumn.name}}</button></th>
+            -->
+            <th ng-repeat="colMapVal in theModel.skuDataView.colMap | filter:{show: true}">
+                <button>{{colMapVal.colName}}</button>
+            </th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="itemView in theModel.skuViewDataTable.dataArray | limitTo:limitVal:begin">
-            <td ng-repeat="(key, value) in itemView | custom: theModel.skuViewDataTable.columnDisplayInfos">{{value}}</td>
+        <!-- old way
+        <tr ng-repeat="itemView in theModel.skuDataTable.dataArray | limitTo:limitVal:begin">
+            <td ng-repeat="(key, value) in itemView | custom: theModel.skuDataTable.columnDisplayInfos">{{value}}
+            </td>
+        </tr>
+        -->
+        <tr ng-repeat="skuRow in theModel.skuDataView.rows | limitTo:limitVal:begin">
+            <td ng-repeat="(key, value) in skuRow">{{value}}
+            </td>
         </tr>
         </tbody>
     </table>

@@ -84,7 +84,6 @@ angular.module("Toolbox")
                     startY = event.pageY - y;
                     prevElement = element.prev();
                     element.css({
-                        fontSize: '150%',
                         backgroundColor: 'rgba(128, 128, 128,.5)',
                         cursor: 'grabbing'
                     });
@@ -94,7 +93,6 @@ angular.module("Toolbox")
 
                 element.on('mouseenter', function (event) {
                     element.css({
-                        xfontSize: '120%',
                         backgroundColor: 'rgba(128, 128, 128,.5)'
                     });
                 });
@@ -194,7 +192,6 @@ angular.module("Toolbox")
 
                     element.css({
                         top: '0px',
-                        fontSize: '100%',
                         backgroundColor: originalBackgroundColor,
                         cursor: 'grab'
                     });
@@ -213,13 +210,16 @@ t.run(function ($http, $location) {
         for (var x = 0; x < data.TIVS_SKUView.length; x++) {
             data.TIVS_SKUView[x].Item_code = data.TIVS_SKUView[x].ItemColorCodes.substring(0, 5);
         }
-        model.skuViewDataTable = new DataTable('skuViewDataTable', data.TIVS_SKUView);
+        model.skuDataTable = new DataTable('skuDataTable', data.TIVS_SKUView);
+        model.skuDataView = new DataView('skuDataView', model.skuDataTable);
+        //model.skuDataView.showColumns(['SKU_key', 'Item_code', 'Item_fkey', 'Size_code'], true);
 
-        model.itemColorColumns = new DataTable('itemColorViewDataTable', data.TIVS_ItemColorView);
+        model.itemColorDataTable = new DataTable('itemColorViewDataTable', data.TIVS_ItemColorView);
 
-        model.itemColumns = new DataTable('itemViewDataTable', data.TIVS_ItemView);
+        model.itemDataTable = new DataTable('itemViewDataTable', data.TIVS_ItemView);
 
-        model.referenceItemViewDataTable = new DataTable('skuViewDataTable', data.TIVS_ReferenceItemView);
+        model.referenceItemDataTable = new DataTable('referenceItemDataTable', data.TIVS_ReferenceItemView);
+
     }).error(function (error) {
         alert("error in t.run: " + error);
     })
@@ -235,7 +235,9 @@ t.controller("TIVSController", function ($scope) {
 
     $scope.incPage = function (incVal) {
         $scope.page = $scope.page + incVal;
+        if ($scope.page < 0) $scope.page = 0;
         $scope.begin = $scope.begin + (incVal * $scope.limitVal);
+        if ($scope.begin < 0) $scope.begin = 0;
     };
 
     // how to make a javascript library
