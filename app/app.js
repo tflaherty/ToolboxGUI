@@ -94,7 +94,7 @@ angular.module("Toolbox")
 
                 element.on('mouseenter', function (event) {
                     element.css({
-                        fontSize: '150%',
+                        xfontSize: '120%',
                         backgroundColor: 'rgba(128, 128, 128,.5)'
                     });
                 });

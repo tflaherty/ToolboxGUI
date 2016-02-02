@@ -56,16 +56,16 @@
     <table>
         <thead>
         <tr>
-            <th>
+            <th colspan="0">
                 <button ng-click="showColumnSelect = !showColumnSelect">Show & Order Columns</button>
                 <button ng-click="showFilter = !showFilter">Filter Columns</button>
                 <button ng-click="incPage(-1)">&lt;</button>
                 <button ng-click="incPage(1)">&gt;</button>
-                <div>Page Size: <select ng-model='limitVal' ng-options='item for item in limitRange'></select></div>
+                <select ng-model='limitVal' ng-options='item for item in limitRange'></select>
             </th>
         </tr>
         <tr>
-            <th ng-repeat="skuColumn in theModel.skuViewDataTable.columnDisplayInfos | filter:{show: true}">{{skuColumn.name}}</th>
+            <th ng-repeat="skuColumn in theModel.skuViewDataTable.columnDisplayInfos | filter:{show: true}"><button>{{skuColumn.name}}</button></th>
         </tr>
         </thead>
         <tbody>
