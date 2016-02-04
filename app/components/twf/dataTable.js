@@ -152,7 +152,7 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
 
     var filterAndSortedDataArray = function () {
         return dataArray;
-    }
+    };
 
     this.join = function (otherDataTable, joinInfo) {
         // this generates a full inner
@@ -164,12 +164,8 @@ function DataTable(_tableName, _arrayOfRecordsUsingNameValuePairs) {
 
 function DataView(_dataViewName, _dataTable) {
     // private variables
-    var colMap = [];
-    var _rows = [];
-
-    for (var i = 0; i < _dataTable.columnNames.length; i++) {
-        colMap.push({colIndex: i, show: false, colName: _dataTable.columnNames[i]});
-    }
+    this.colMap = [];
+    this.rows = [];
 
     // properties
     Object.defineProperty(this, 'name', {
@@ -186,48 +182,65 @@ function DataView(_dataViewName, _dataTable) {
         writable: false
     });
 
-    Object.defineProperty(this, 'colMap', {
-        configurable: false,
-        enumerable: true,
-        get: function () { return colMap; }
-    });
-
-    Object.defineProperty(this, 'rows', {
-        configurable: false,
-        enumerable: true,
-        get: function () {
-            _rows.length = 0;
-            var newRow = {};
-            var emptyRow = true;
-            for (var row = 0; row < this.dataTable.rawDataArray.length; row++) {
-                emptyRow = true;
-                newRow = {};
-                for (var x = 0; x < colMap.length; x++) {
-                    if (colMap[x].show) {
-                        emptyRow = false;
-                        newRow[colMap[x].colName] = this.dataTable.rawDataArray[row][colMap[x].colName];
-                    }
-                }
-                if (!emptyRow) {
-                    _rows.push(newRow);
+    this.regenerateRows = function regenerateRows(colName) {
+        // ToDo: preserve the sort order when we do this!!
+        this.rows.length = 0;
+        var newRow = {};
+        var emptyRow = true;
+        for (var row = 0; row < this.dataTable.rawDataArray.length; row++) {
+            emptyRow = true;
+            newRow = {};
+            for (var x = 0; x < this.colMap.length; x++) {
+                if (this.colMap[x].show) {
+                    emptyRow = false;
+                    newRow[this.colMap[x].colName] = this.dataTable.rawDataArray[row][this.colMap[x].colName];
                 }
             }
-            return _rows;
+            if (!emptyRow) {
+                this.rows.push(newRow);
+            }
         }
-    });
+        return this.rows;
+    };
 
-    this.getColumnName = function (colIndex) {
+
+    this.sortByColumnName = function sortByColumnName(colName) {
+            this.rows.sort(function (a, b) {
+                //if (a[colName] < b[colName]) return -1;
+                //if (a[colName] > b[colName]) return 1;
+                return a[colName]-b[colName];
+            });
+    };
+
+    this.getColumnName = function getColumnName(colIndex) {
         return _dataTable.columnNames[colIndex];
-    }
+    };
 
-    this.showColumns = function (colNames, show) {
+    this.toggleColumnVisibility = function toggleColumnVisibility(colName) {
+        for (var j = 0; j < this.colMap.length; j++) {
+            if (this.colMap[j].colName === colName) {
+                this.colMap[j].show = !this.colMap[j].show;
+                this.regenerateRows();
+                break;
+            }
+        }
+    };
+
+    this.showColumns = function showColumns(colNames, show) {
         for (var i = 0; i < colNames.length; i++) {
-            for (var j = 0; j < colMap.length; j++) {
-                if (colMap[j].colName === colNames[i]) {
-                    colMap[j].show = show;
+            for (var j = 0; j < this.colMap.length; j++) {
+                if (this.colMap[j].colName === colNames[i]) {
+                    this.colMap[j].show = show;
                     break;
                 }
             }
         }
+        this.regenerateRows();
+    };
+
+    for (var i = 0; i < _dataTable.columnNames.length; i++) {
+        this.colMap.push({colIndex: i, show: false, colName: _dataTable.columnNames[i]});
     }
+
+    this.regenerateRows();
 }

@@ -54,7 +54,8 @@
             </li>
             -->
             <li my-Draggable="{array: theModel.skuDataView.colMap, index: $index}"
-                ng-repeat="colMapVal in theModel.skuDataView.colMap"><input type="checkbox" ng-model="colMapVal.show">{{colMapVal.colName}}
+                ng-repeat="colMapVal in theModel.skuDataView.colMap">
+                <input type="checkbox"  ng-checked="colMapVal.show" ng-click="theModel.skuDataView.toggleColumnVisibility(colMapVal.colName)">{{colMapVal.colName}}
             </li>
         </ul>
     </div>
@@ -67,6 +68,7 @@
                 <button ng-click="incPage(-1)">&lt;</button>
                 <button ng-click="incPage(1)">&gt;</button>
                 <select ng-model='limitVal' ng-options='item for item in limitRange'></select>
+                <!-- <button ng-click="showCurrentRows()">&gt;</button> -->
             </th>
         </tr>
         <tr>
@@ -74,7 +76,7 @@
             <th ng-repeat="skuColumn in theModel.skuDataTable.columnDisplayInfos | filter:{show: true}"><button>{{skuColumn.name}}</button></th>
             -->
             <th ng-repeat="colMapVal in theModel.skuDataView.colMap | filter:{show: true}">
-                <button>{{colMapVal.colName}}</button>
+                <button ng-click="theModel.skuDataView.sortByColumnName(colMapVal.colName)">{{colMapVal.colName}}</button>
             </th>
         </tr>
         </thead>

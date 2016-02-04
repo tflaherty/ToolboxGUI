@@ -212,7 +212,7 @@ t.run(function ($http, $location) {
         }
         model.skuDataTable = new DataTable('skuDataTable', data.TIVS_SKUView);
         model.skuDataView = new DataView('skuDataView', model.skuDataTable);
-        //model.skuDataView.showColumns(['SKU_key', 'Item_code', 'Item_fkey', 'Size_code'], true);
+        model.skuDataView.showColumns(['SKU_key', 'Item_code', 'Item_fkey', 'Size_code'], true);
 
         model.itemColorDataTable = new DataTable('itemColorViewDataTable', data.TIVS_ItemColorView);
 
@@ -242,21 +242,8 @@ t.controller("TIVSController", function ($scope) {
 
     // how to make a javascript library
     // http://checkman.io/blog/creating-a-javascript-library/
-    $scope.extractDistinctValues = function (dataArray) {
-        var keys = Object.keys(dataArray[0]);
-        var results = new Array(keys.length);
-        for (var i = 0; i < keys.length; i++) {
-            results[keys[i]] = [];
-        }
-        for (var j = 0; j < dataArray.length; j++) {
-            for (var k = 0; k < keys.length; k++) {
-                if (results[keys[k]].indexOf(dataArray[j][keys[k]]) === - 1) {
-                    results[keys[k]].push(dataArray[j][keys[k]]);
-                }
-            }
-        }
-
-        return results;
+    $scope.showCurrentRows = function showCurrentRows() {
+        alert(JSON.stringify($scope.theModel.skuDataView.rows));
     };
 });
 
