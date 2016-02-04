@@ -24,6 +24,8 @@ var model = {
 // jquery learning center
 // http://learn.jquery.com/
 
+// http://www.bennadel.com/blog/2480-unbinding-watch-listeners-in-angularjs.htm
+
 var t = angular.module('Toolbox', []);
 
 angular.module("Toolbox")
@@ -177,6 +179,9 @@ angular.module("Toolbox")
                         if (newIndexOfMovedItem != oldIndexOfMovedItem) {
                             var newIndexOfMovedItem = element.index();
                             var data = scope.columnInfo.array;
+                            var dataView = scope.columnInfo.dataView;
+                            //dataView.moveColumn(oldIndexOfMovedItem, newIndexOfMovedItem);
+
                             if (angular.isArray(data)) {
                                 data.splice(newIndexOfMovedItem, 0, data.splice(oldIndexOfMovedItem, 1)[0]);
                                 scope.$apply();
@@ -187,6 +192,7 @@ angular.module("Toolbox")
                                 //}
                                 //console.log('*** end of bottom level ************************************************');
                             }
+
                         }
                     }
 

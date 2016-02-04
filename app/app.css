@@ -3,6 +3,9 @@
 /* http://www.w3schools.com/css/css3_buttons.asp */
 /* neon buttons */
 /* http://enjoycss.com/gallery/text_effects/39#textShadow */
+/* styling checkboxes */
+/* http://www.hongkiat.com/blog/css3-checkbox-radio/ */
+/* http://codersblock.com/blog/checkbox-trickery-with-css/ */
 
 * {
     box-sizing: border-box;
@@ -48,15 +51,16 @@ th button:active {
 th button:hover {
     /* text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #ff00de , 0 0 70px #ff00de , 0 0 80px #ff00de , 0 0 100px #ff00de ; */
     /* text-shadow: 0 0 2px rgba(255,255,255,1) , 0 0 5px rgba(255,255,255,1) , 0 0 7px rgba(255,255,255,1) , 0 0 10px #ff00de , 0 0 17px #ff00de , 0 0 20px #ff00de , 0 0 25px #ff00de ; */
-    text-shadow: 0 0 1px rgba(255,255,255,1) , 0 0 2px rgba(255,255,255,1) , 0 0 3px rgba(255,255,255,1) , 0 0 4px #ff00de , 0 0 5px #ff00de , 0 0 6px #ff00de , 0 0 7px #ff00de ;
+    text-shadow: 0 0 1px rgba(255,255,255,.2) , 0 0 2px rgba(255,255,255,.2) , 0 0 3px rgba(255,255,255,.2) , 0 0 4px #ff00de , 0 0 5px #ff00de , 0 0 6px #ff00de , 0 0 7px #ff00de ;
     color: floralwhite;
 }
 
 td { border: 1px solid rgb(102 , 78, 102); border-radius: 5px; }
 thead tr {  background-color: rgb(102 , 78, 102); }
 
-li:nth-of-type(odd) { background-color: rgb(198 , 151, 198); }  /* SKUBaseColor SKUDarkerAlternatingRowColor */
-li:nth-of-type(even) { background-color: rgb(217, 165, 217); }  /* ModifyBrightness(SKUBaseColor, 1.1)  SKULighterAlternatingRowColor */
+input[type="checkbox"] { background-color: red; color: yellow;  }
+.hideShowList li:nth-of-type(odd) { background-color: rgb(198 , 151, 198); }  /* SKUBaseColor SKUDarkerAlternatingRowColor */
+.hideShowList li:nth-of-type(even) { background-color: rgb(217, 165, 217); }  /* ModifyBrightness(SKUBaseColor, 1.1)  SKULighterAlternatingRowColor */
 .hideShowList { background-color: rgb(102 , 78, 102); }     /* SKUBaseColor with brightness of 40 */
 
 /*

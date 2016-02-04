@@ -205,11 +205,18 @@ function DataView(_dataViewName, _dataTable) {
 
 
     this.sortByColumnName = function sortByColumnName(colName) {
-            this.rows.sort(function (a, b) {
-                //if (a[colName] < b[colName]) return -1;
-                //if (a[colName] > b[colName]) return 1;
-                return a[colName]-b[colName];
-            });
+        this.rows.sort(function (a, b) {
+            //if (a[colName] < b[colName]) return -1;
+            //if (a[colName] > b[colName]) return 1;
+            return a[colName]-b[colName];
+        });
+    };
+
+    this.moveColumn = function moveColumn(oldIndex, newIndex) {
+        if (oldIndex === newIndex) return;
+
+        this.colMap.splice(newIndexOfMovedItem, 0, data.splice(oldIndexOfMovedItem, 1)[0]);
+        this.regenerateRows();
     };
 
     this.getColumnName = function getColumnName(colIndex) {
