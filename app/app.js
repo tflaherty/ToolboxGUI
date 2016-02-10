@@ -18,6 +18,48 @@ var model = {
     user: "Tom"
 };
 
+var getAllWatchers = function () {
+    return getWatchers(document);
+};
+
+var getWatchers = function (element) {
+    // convert to a jqLite/jQuery element
+    // angular.element is idempotent
+    var el = angular.element(
+        // defaults to the body element
+        element || document.getElementsByTagName('body')
+    )
+    // extract the DOM element data
+        , elData = el.data()
+    // initalize returned watchers array
+        , watchers = [];
+
+    // AngularJS lists watches in 3 categories
+    // each contains an independent watch list
+    angular.forEach([
+            // general inherited scope
+            elData.$scope,
+            // isolate scope attached to templated directive
+            elData.$isolateScope,
+            // isolate scope attached to templateless directive
+            elData.$isolateScopeNoTemplate
+        ],
+        function (scope) {
+            // each element may not have a scope class attached
+            if (scope) {
+                // attach the watch list
+                watchers = watchers.concat(scope.$$watchers || []);
+            }
+        }
+    );
+
+    // recurse through DOM tree
+    angular.forEach(el.children(), function (childEl) {
+        watchers = watchers.concat(getWatchers(childEl));
+    });
+
+    return watchers;
+};
 // how to use drag and drop to reorder lists!
 // http://tool-man.org/ToolManDHTML/sorting.html
 
@@ -26,6 +68,13 @@ var model = {
 
 // http://www.bennadel.com/blog/2480-unbinding-watch-listeners-in-angularjs.htm
 
+// avoiding watches in angularjs
+// https://www.accelebrate.com/blog/effective-strategies-avoiding-watches-angularjs/
+
+// angularjs digest loop
+// https://www.ng-book.com/p/The-Digest-Loop-and-apply/
+
+// https://masteringmean.com/lessons/632-AngularJS-Optimization
 var t = angular.module('Toolbox', []);
 
 angular.module("Toolbox")
@@ -180,9 +229,9 @@ angular.module("Toolbox")
                             var newIndexOfMovedItem = element.index();
                             var data = scope.columnInfo.array;
                             var dataView = scope.columnInfo.dataView;
-                            //dataView.moveColumn(oldIndexOfMovedItem, newIndexOfMovedItem);
+                            dataView.moveColumn(oldIndexOfMovedItem, newIndexOfMovedItem);
 
-                            if (angular.isArray(data)) {
+                            if (false && angular.isArray(data)) {
                                 data.splice(newIndexOfMovedItem, 0, data.splice(oldIndexOfMovedItem, 1)[0]);
                                 scope.$apply();
                                 //console.log("item was moved from " + oldIndexOfMovedItem + " to " + newIndexOfMovedItem);
@@ -231,7 +280,7 @@ t.run(function ($http, $location) {
     })
 });
 
-t.controller("TIVSController", function ($scope) {
+t.controller("TIVSController", function ($scope, $window) {
     $scope.theModel = model;
     $scope.showColumnSelect = false;
     $scope.limitVal = 5;
@@ -250,6 +299,10 @@ t.controller("TIVSController", function ($scope) {
     // http://checkman.io/blog/creating-a-javascript-library/
     $scope.showCurrentRows = function showCurrentRows() {
         alert(JSON.stringify($scope.theModel.skuDataView.rows));
+    };
+
+    $scope.showWatchers = function() {
+        alert(JSON.stringify($window.getAllWatchers()));
     };
 });
 

@@ -185,7 +185,7 @@ function DataView(_dataViewName, _dataTable) {
     this.regenerateRows = function regenerateRows(colName) {
         // ToDo: preserve the sort order when we do this!!
         this.rows.length = 0;
-        var newRow = {};
+        var newRow = {lastModified: Date.now()};
         var emptyRow = true;
         for (var row = 0; row < this.dataTable.rawDataArray.length; row++) {
             emptyRow = true;
@@ -200,6 +200,7 @@ function DataView(_dataViewName, _dataTable) {
                 this.rows.push(newRow);
             }
         }
+        this.rows.lastModified = Date.now();
         return this.rows;
     };
 
@@ -215,7 +216,7 @@ function DataView(_dataViewName, _dataTable) {
     this.moveColumn = function moveColumn(oldIndex, newIndex) {
         if (oldIndex === newIndex) return;
 
-        this.colMap.splice(newIndexOfMovedItem, 0, data.splice(oldIndexOfMovedItem, 1)[0]);
+        this.colMap.splice(newIndex, 0, this.colMap.splice(oldIndex, 1)[0]);
         this.regenerateRows();
     };
 
