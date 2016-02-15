@@ -75,7 +75,7 @@ var getWatchers = function (element) {
 // https://www.ng-book.com/p/The-Digest-Loop-and-apply/
 
 // https://masteringmean.com/lessons/632-AngularJS-Optimization
-var t = angular.module('Toolbox', []);
+var t = angular.module('Toolbox', ['ui.grid']);
 
 angular.module("Toolbox")
     .filter('custom', function () {

@@ -11,6 +11,10 @@
     box-sizing: border-box;
 }
 
+.myGrid {
+    width: 500px;
+    height: 250px;
+}
 
 .hideShowList {
     float: left;
