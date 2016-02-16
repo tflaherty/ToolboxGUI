@@ -351,6 +351,8 @@ t.controller("TIVSController", ['$scope', '$window', '$http', '$interval', 'uiGr
                         }
                     }
                     data.TIVS_ItemView[j].subGridOptions = {
+                        enableSorting: true,
+                        enableGridMenu: true,
                         columnDefs: [ {name:"Color", field:"Color_code"} ],
                         data: subGridData
                     }
