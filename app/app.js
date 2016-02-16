@@ -75,7 +75,7 @@ var getWatchers = function (element) {
 // https://www.ng-book.com/p/The-Digest-Loop-and-apply/
 
 // https://masteringmean.com/lessons/632-AngularJS-Optimization
-var t = angular.module('Toolbox', ['ui.grid']);
+var t = angular.module('Toolbox', ['ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.pinning', 'ui.grid.grouping']);
 
 angular.module("Toolbox")
     .filter('custom', function () {
@@ -280,7 +280,7 @@ t.run(function ($http, $location) {
     })
 });
 
-t.controller("TIVSController", function ($scope, $window) {
+t.controller("TIVSController", ['$scope', '$window', '$http', '$interval', 'uiGridGroupingConstants', function ($scope, $window, $http, $interval, uiGridGroupingConstants) {
     $scope.theModel = model;
     $scope.showColumnSelect = false;
     $scope.limitVal = 5;
@@ -304,5 +304,56 @@ t.controller("TIVSController", function ($scope, $window) {
     $scope.showWatchers = function() {
         alert(JSON.stringify($window.getAllWatchers()));
     };
-});
+
+    // stuff for ui grid
+    $scope.columns = [];
+    $scope.gridOptions = {
+        enableSorting: true,
+        enableGridMenu: true,
+        columnDefs: $scope.columns,
+        onRegisterApi: function( gridApi ) {
+            $scope.gridApi = gridApi;
+        }
+    };
+
+    init();
+
+    function init() {
+        $scope.loading = true;
+        $http.get('TIVSData.json')
+            .success(function (data) {
+                $scope.columns.length = 0;
+
+                var itemCodeRegex = /\d+/;
+                var colorCodeRegex = /[a-zA-Z]+/;
+                for (var x = 0; x < data.TIVS_SKUView.length; x++) {
+                    data.TIVS_SKUView[x].Item_code = data.TIVS_SKUView[x].ItemColorCodes.match(itemCodeRegex)[0];
+                    data.TIVS_SKUView[x].Color_code = data.TIVS_SKUView[x].ItemColorCodes.match(colorCodeRegex)[0];
+                }
+                var colNames = Object.keys(data.TIVS_SKUView[0]);
+                for (var i = 0; i < colNames.length; i++) {
+                    $scope.columns[i] = { field: colNames[i] };
+                    if (colNames[i] !== 'Color_code' && colNames[i] !== 'Item_code' && colNames[i] !== 'Size_code') {
+                        $scope.columns[i].visible = false;
+                    }
+                    if (colNames[i] === 'Item_code') {
+                        $scope.columns[i].grouping = { groupPriority: 0 };
+                        $scope.columns[i].sort = { groupPriority: 0, direction: 'asc' };
+                    }
+                    if (colNames[i] === 'Color_code') {
+                        $scope.columns[i].grouping = { groupPriority: 1 };
+                        $scope.columns[i].sort = { groupPriority: 1, direction: 'asc' };
+                    }
+                }
+                $scope.gridOptions.data = data.TIVS_SKUView;
+                //$scope.gridApi.grouping.clearGrouping();
+                //$scope.gridApi.grouping.groupColumn('SKU_key');
+                //$scope.gridApi.grouping.aggregateColumn('Item_code', uiGridGroupingConstants.aggregation.COUNT);
+            })
+            .finally(function () {
+                $scope.loading = false;
+                $scope.loadAttempted = true;
+            })
+    }
+}]);
 
