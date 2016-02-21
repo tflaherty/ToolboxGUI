@@ -37,8 +37,19 @@
 }
 
 #myGrid .ui-grid-viewport { vertical-align: top; }
-#myGrid .ui-grid-viewport .ui-grid-row:nth-child(2n+1) .ui-grid-cell {background-color: rgb(198 , 151, 198);}  /* SKUBaseColor SKUDarkerAlternatingRowColor */
-#myGrid .ui-grid-viewport .ui-grid-row:nth-child(2n)   .ui-grid-cell { background-color: rgb(217, 165, 217); }  /* ModifyBrightness(SKUBaseColor, 1.1)  SKULighterAlternatingRowColor */
+
+.ui-grid[ui-grid="referenceItemGridOptions"] .ui-grid-viewport .ui-grid-row:nth-child(2n+1) .ui-grid-cell {background-color: rgb(222, 241, 249);}  /* rgb 222, 241, 249 ReferenceItemDarkerAlternatingRowColor */
+.ui-grid[ui-grid="referenceItemGridOptions"] .ui-grid-viewport .ui-grid-row:nth-child(2n)   .ui-grid-cell { background-color: rgb(235, 251, 251); }  /* rgb 235, 251, 251 ReferenceItemLighterAlternatingRowColor */
+
+.ui-grid[ui-grid="row.entity.itemGridOptions"] .ui-grid-viewport .ui-grid-row:nth-child(2n+1) .ui-grid-cell {background-color: rgb(230, 185, 140);}  /* ItemBaseColor ItemDarkerAlternatingRowColor orig was 255, 205, 156*/
+.ui-grid[ui-grid="row.entity.itemGridOptions"] .ui-grid-viewport .ui-grid-row:nth-child(2n)   .ui-grid-cell { background-color: rgb(255, 205, 156); }  /* ModifyBrightness(ItemBaseColor, 1.1)  SKULighterAlternatingRowColor */
+
+.ui-grid[ui-grid="row.entity.itemColorGridOptions"] .ui-grid-viewport .ui-grid-row:nth-child(2n+1) .ui-grid-cell {background-color: rgb(250, 250, 210);}  /* ItemColorBaseColor ItemColorDarkerAlternatingRowColor */
+.ui-grid[ui-grid="row.entity.itemColorGridOptions"] .ui-grid-viewport .ui-grid-row:nth-child(2n)   .ui-grid-cell { background-color: rgb(255, 255, 214); }  /* ModifyBrightness(ItemColorBaseColor, 1.05)  ItemColorLighterAlternatingRowColor */
+
+.ui-grid[ui-grid="row.entity.subGridOptions"] .ui-grid-viewport .ui-grid-row:nth-child(2n+1) .ui-grid-cell {background-color: rgb(198 , 151, 198);}  /* SKUBaseColor SKUDarkerAlternatingRowColor */
+.ui-grid[ui-grid="row.entity.subGridOptions"] .ui-grid-viewport .ui-grid-row:nth-child(2n)   .ui-grid-cell { background-color: rgb(217, 165, 217); }  /* ModifyBrightness(ItemBaseColor, 1.1)  ItemLighterAlternatingRowColor */
+
 #myGrid .ui-grid-viewport .ui-grid-cell { border: 1px solid rgb(102 , 78, 102); border-radius: 5px; }
 #myGrid .ui-grid-viewport .ui-grid-cell, #myGrid .ui-grid-row, #myGrid .ui-grid-cell .ui-grid-vertical-bar { height: 20px; }
 #myGrid .ui-grid-viewport .ui-grid-cell-contents { text-align: left; vertical-align: middle; }

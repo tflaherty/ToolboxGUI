@@ -48,7 +48,7 @@
     </script>
 </head>
 <body ng-controller="TIVSController">
-<div ui-grid="gridOptions" id="myGrid" ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-grouping ui-grid-expandable>
+<div ui-grid="referenceItemGridOptions" id="myGrid" ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-grouping ui-grid-expandable>
     <div class="grid-msg-overlay" ng-hide="!loading">
         <div class="msg">
             <span>
@@ -57,7 +57,7 @@
             </span>
         </div>
     </div>
-    <div class="grid-msg-overlay" ng-hide="loading || gridOptions.data.length">
+    <div class="grid-msg-overlay" ng-hide="loading || referenceItemGridOptions.data.length">
         <div class="msg">
             <span>No Data</span>
         </div>

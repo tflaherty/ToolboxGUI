@@ -9,6 +9,9 @@
 // https://www.ng-book.com/p/Optimizing-Angular-Apps/
 // http://chrisrng.svbtle.com/using-angular-compile-to-escape-watcher-hell
 
+// info about problems with expandable uigrid
+// https://github.com/angular-ui/ui-grid/issues/2503
+
 // ideas:
 //      - use css to move the lis above and below the li being moved and
 //          only do the insert when the mouse is release
@@ -306,9 +309,26 @@ t.controller("TIVSController", ['$scope', '$window', '$http', '$interval', 'uiGr
     };
 
     // stuff for ui grid
+    $scope.referenceItemColumns = [];
+    $scope.referenceItemGridOptions = {
+        expandableRowTemplate: 'itemExpandableRowTemplate.html',
+        expandableRowHeight: 150,
+        //subGridVariable will be available in subGrid scope
+        //expandableRowScope: {
+        //    subGridVariable: 'subGridScopeVariable'
+        //}
+        enableSorting: true,
+        enableGridMenu: true,
+        columnDefs: $scope.referenceItemColumns,
+        onRegisterApi: function( gridApi ) {
+            $scope.referenceItemGridApi = gridApi;
+        }
+    };
+
+    /*
     $scope.columns = [];
     $scope.gridOptions = {
-        expandableRowTemplate: 'expandableRowTemplate.html',
+        expandableRowTemplate: 'itemExpandableRowTemplate.html',
         expandableRowHeight: 150,
         //subGridVariable will be available in subGrid scope
         //expandableRowScope: {
@@ -321,10 +341,127 @@ t.controller("TIVSController", ['$scope', '$window', '$http', '$interval', 'uiGr
             $scope.gridApi = gridApi;
         }
     };
+    */
 
-    init();
+    newInit();
 
-    function init() {
+    function newInit() {
+        $scope.loading = true;
+        $http.get('TIVSData.json')
+            .success(function (data) {
+                $scope.referenceItemColumns.length = 0; // is this needed?
+
+                var itemCodeRegex = /\d+/;
+                var colorCodeRegex = /[a-zA-Z]+/;
+
+                // do ReferenceItemView level stuff
+                // ToDo: replace this with a foreach
+                var referenceItemColNames = Object.keys(data.TIVS_ReferenceItemView[0]);
+                for (var i = 0; i < referenceItemColNames.length; i++) {
+                    $scope.referenceItemColumns[i] = { field: referenceItemColNames[i] };
+                    if (referenceItemColNames[i] !== 'Reference_code' && referenceItemColNames[i] !== 'OverUnder') {
+                        $scope.referenceItemColumns[i].visible = false;
+                    }
+                }
+
+                // do ItemView level stuff
+                for (var j = 0; j < data.TIVS_ReferenceItemView.length; j++) {
+                    var itemData = [];
+                    itemData.length = 0;
+                    for (var k = 0; k < data.TIVS_ItemView.length; k++) {
+                        if (data.TIVS_ItemView[k].ReferenceItem_fkey === data.TIVS_ReferenceItemView[j].ReferenceItem_key) {
+                            itemData.push(data.TIVS_ItemView[k]);
+                        }
+                    }
+                    data.TIVS_ReferenceItemView[j].itemGridOptions = {
+                        expandableRowTemplate: 'itemColorExpandableRowTemplate.html',
+                        expandableRowHeight: 150,
+                        enableSorting: true,
+                        enableGridMenu: true,
+                        columnDefs: [{name: "Item", field: "Item_code"}],
+                        data: itemData,
+                        onRegisterApi: function( gridApi ) {
+                            $scope.itemGridApi = gridApi;
+                        }
+                    }
+                }
+
+                // do ItemColor level stuff
+                for (var l = 0; l < data.TIVS_ItemView.length; l++) {
+                    var itemColorData = [];
+                    itemColorData.length = 0;
+                    for (var m = 0; m < data.TIVS_ItemView.length; m++) {
+                        if (data.TIVS_ItemColorView[m].Item_fkey === data.TIVS_ItemView[l].Item_key) {
+                            itemColorData.push(data.TIVS_ItemColorView[m]);
+                        }
+                    }
+                    data.TIVS_ItemView[l].itemColorGridOptions = {
+                        enableSorting: true,
+                        enableGridMenu: true,
+                        columnDefs: [{name: "Color", field: "Color_code"}],
+                        data: itemColorData
+                    }
+                }
+
+
+
+                /*
+                for(var j = 0; j < data.TIVS_ItemView.length; j++) {
+                    var subGridData = [];
+                    subGridData.length = 0;
+                    for (var k = 0; k < data.TIVS_ItemColorView.length; k++) {
+                        if (data.TIVS_ItemColorView[k].Item_fkey === data.TIVS_ItemView[j].Item_key) {
+                            subGridData.push(data.TIVS_ItemColorView[k]);
+                        }
+                    }
+                    data.TIVS_ItemView[j].subGridOptions = {
+                        enableSorting: true,
+                        enableGridMenu: true,
+                        columnDefs: [ {name:"Color", field:"Color_code"} ],
+                        data: subGridData
+                    }
+                }
+                */
+                $scope.referenceItemGridOptions.data = data.TIVS_ReferenceItemView;
+
+                // do ItemColor level stuff
+
+
+                // do SKUView level stuff
+                for (var x = 0; x < data.TIVS_SKUView.length; x++) {
+                    data.TIVS_SKUView[x].Item_code = data.TIVS_SKUView[x].ItemColorCodes.match(itemCodeRegex)[0];
+                    data.TIVS_SKUView[x].Color_code = data.TIVS_SKUView[x].ItemColorCodes.match(colorCodeRegex)[0];
+                }
+
+                /*
+                 var skuColNames = Object.keys(data.TIVS_SKUView[0]);
+                 for (var i = 0; i < skuColNames.length; i++) {
+                 $scope.columns[i] = { field: skuColNames[i] };
+                 if (skuColNames[i] !== 'Color_code' && skuColNames[i] !== 'Item_code' && skuColNames[i] !== 'Size_code') {
+                 $scope.columns[i].visible = false;
+                 }
+                 if (skuColNames[i] === 'Item_code') {
+                 //$scope.columns[i].grouping = { groupPriority: 0 };
+                 //$scope.columns[i].sort = { groupPriority: 0, direction: 'asc' };
+                 }
+                 if (skuColNames[i] === 'Color_code') {
+                 //$scope.columns[i].grouping = { groupPriority: 1 };
+                 //$scope.columns[i].sort = { groupPriority: 1, direction: 'asc' };
+                 }
+                 }
+                 $scope.gridOptions.data = data.TIVS_ItemView;
+                 /// This can be used for dynamic grouping $scope.gridApi.grouping.clearGrouping();
+                 /// This can be used for dynamic grouping $scope.gridApi.grouping.groupColumn('SKU_key');
+                 /// This can be used for dynamic grouping $scope.gridApi.grouping.aggregateColumn('Item_code', uiGridGroupingConstants.aggregation.COUNT);
+                 */
+            })
+            .finally(function () {
+                $scope.loading = false;
+                $scope.loadAttempted = true;
+            })
+    }
+
+    function oldInit() {
         $scope.loading = true;
         $http.get('TIVSData.json')
             .success(function (data) {
